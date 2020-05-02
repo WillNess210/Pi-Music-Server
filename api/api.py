@@ -1,4 +1,5 @@
 import time
+import atexit
 import threading
 from flask import Flask
 import pygame
@@ -12,13 +13,19 @@ dataLock = threading.lock()
 yourThread = threading.Thread()
 
 def func_to_repeat():
+    global yourThread
     print("Eyy")
     yourThread = threading.Timer(REFRESH_TIME, func_to_repeat)
     yourThread.start()
 
+def interrupt():
+    global yourThread
+    yourThread.cancel()
+
 yourThread = threading.Timer(REFRESH_TIME, func_to_repeat)
 yourThread.start()
 
+atexit.register(interrupt)
 
 @app.route('/time')
 def get_current_time():
