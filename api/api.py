@@ -1,6 +1,6 @@
 import time
 from flask import Flask
-from playsound import playsound
+import pygame
 
 app = Flask(__name__)
 
@@ -11,4 +11,7 @@ def get_current_time():
 
 @app.route("/wav")
 def streamwav():
-    playsound('../public/startup-sound.mp3')
+    pygame.mixer.init()
+    pygame.mixer.music.load('../public/startup-sound.wav')
+    pygame.mixer.music.play()
+    return {'success': True};
