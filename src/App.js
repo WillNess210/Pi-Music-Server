@@ -19,7 +19,8 @@ function App() {
 
         <p>The current time is {currentTime}.</p>
       </header>
-      <button onClick={() => fetch('/wav')}>Play Sound On Server</button>
+      <button onClick={() => fetch('/addSongToQueue')}>Play Sound On Server</button>
+      <button onClick={() => fetch('/addSoundCloudTrack/786101896')}>Add Soundcloud Song</button>
     </div>
   );
 }
