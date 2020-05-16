@@ -17,6 +17,5 @@ yarn-debug.log*
 yarn-error.log*
 
 # flask stuff
-api/venv
-api/__pycache__
-api/get_env.sh
+music_backend/env
+music_backend/geckodriver.log
