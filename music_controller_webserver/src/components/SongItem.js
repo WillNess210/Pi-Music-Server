@@ -39,7 +39,7 @@ class SongItem extends Component{
         }
 
         const renderButton = () => {
-            return this.props.current_song ? <SongButton button_type="empty"/> : 
+        return this.props.current_song ? [<SongButton button_type="skip" button_func={this.props.song_mod}/>]: 
             this.props.queue_type === "queue" ? <SongButton button_type="remove" button_func={this.props.song_mod} remove_key={this.props.song.key}/> : 
             <SongButton button_type="add" song_url={this.props.song.url} button_func={this.props.song_mod}/>;
         }

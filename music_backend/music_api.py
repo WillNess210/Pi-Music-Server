@@ -48,13 +48,19 @@ def remove_song(track_key):
             print(f"{s['key']} != {track_key}")
     return jsonify({'success': False})
 
+@app.route('/skip_song', methods = ['GET'])
+def skip_song():
+    global song_queue
+    song_queue['skip_flag'] = True
+    return jsonify({'success': song_queue['current_song'][0] != None})
+
 
 def getPlayerURL(track_url):
     url_to_query = f"https://soundcloud.com/oembed?url={track_url}&client_id={SOUNDCLOUD_ID}"
     resp = ET.fromstring(requests.get(url_to_query).content)
     return resp.find('html').text.split("src=\"")[1].split("\"><")[0]
 
-def playSong(track_url):
+def playSong(track_url, song_queue):
     player_url = getPlayerURL(track_url)
     browser = webdriver.Firefox()
     browser.get(player_url)
@@ -68,7 +74,7 @@ def playSong(track_url):
         
     playButton = browser.find_elements_by_class_name('playButton')[0]
     def isSongOver():
-        return playButton.get_property('title') == 'Play'
+        return playButton.get_property('title') == 'Play' or song_queue['skip_flag']
     
     # clicking
     playButton.click()
@@ -76,7 +82,9 @@ def playSong(track_url):
     
     while not isSongOver():
         time.sleep(1)
-    
+
+    song_queue['skip_flag'] = False
+
     browser.quit()
 
 def record_loop(song_queue):
@@ -97,7 +105,7 @@ def record_loop(song_queue):
             songs.pop(0)
             
             print(f"Starting to play {currentSong()}")
-            playSong(currentSong()['url'])
+            playSong(currentSong()['url'], song_queue)
 
             clearCurrentSong()
 
@@ -121,10 +129,11 @@ def createSongObject(soundcloud_url):
 
 if __name__ == "__main__":
     with Manager() as manager:
-        song_queue = manager.dict()
-
-        song_queue['current_song'] = manager.list([None])
-        song_queue['songs'] = manager.list([])
+        song_queue = manager.dict({
+            'current_song': manager.list([None]),
+            'songs': manager.list([]),
+            'skip_flag': False,
+        })
 
         p = Process(target=record_loop, args=(song_queue,))
         p.start()  

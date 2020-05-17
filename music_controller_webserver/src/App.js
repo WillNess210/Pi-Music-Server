@@ -52,6 +52,12 @@ class App extends Component {
     );
   }
 
+  skipSong = () => {
+    axios.get("/skip_song").then(res =>
+      console.log(res.data)
+    );
+  }
+
 
   render() {
     return (
@@ -61,7 +67,7 @@ class App extends Component {
             <Header />
             <Route exact path="/" render={props => (
               <React.Fragment>
-                <SongQueue queue_type='queue' songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong}/>
+                <SongQueue queue_type='queue' songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong} skip_song={this.skipSong}/>
               </React.Fragment>
             )}/>
             <Route exact path = "/add" render={props => (
