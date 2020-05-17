@@ -10,9 +10,13 @@ class SoundcloudSearch extends Component{
         search: '',
         current_search: '',
         songs: [],
+        last_update:-1,
     }
 
-    onChange = (e) => this.setState({'current_search': e.target.value});
+    onChange = (e) => {
+        this.setState({'current_search': e.target.value});
+        this.setState({'last_update': Date.now()});
+    };
 
     createSongObject = (song, key) => {
         return {
@@ -51,13 +55,14 @@ class SoundcloudSearch extends Component{
 
     componentDidMount(){
         this.interval = setInterval(() => {
-            if(this.state.current_search !== this.state.search){
+            if(this.state.current_search !== this.state.search && Date.now() - this.state.last_update > 500){
                 this.setState({
                     search: this.state.current_search,
+                    last_update: Date.now(),
                 });
                 this.searchSoundcloud();
             }
-        }, 2000);
+        }, 1000);
     }
     
     componentWillUnmount(){
@@ -83,6 +88,8 @@ class SoundcloudSearch extends Component{
 
 const searchStyle = {
     width: "100%",
+    height: "50px",
+    fontSize: "30px",
 }
 
 SoundcloudSearch.propTypes = {
