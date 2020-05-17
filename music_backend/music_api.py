@@ -1,9 +1,10 @@
 import time
 from flask import Flask, jsonify
-from multiprocessing import Process, Manager
+from multiprocessing import Process, Manager, Value
 import requests
 import xml.etree.ElementTree as ET 
 from selenium import webdriver
+from ctypes import c_char_p
 import os
 
 
@@ -13,14 +14,18 @@ SOUNDCLOUD_ID = client_id=os.environ.get("SOUNDCLOUD_ID")
 
 @app.route('/songs', methods=['GET'])
 def get_songs():
-   global song_pass
-   return jsonify({'songs': list(song_pass)})
+   global song_queue
+   new_obj = {}
+   new_obj['current_song'] = song_queue['current_song'][0]
+   new_obj['songs'] = list(song_queue['songs'])
+   return jsonify(new_obj)
 
 @app.route('/add_song/url=<path:name>', methods = ['GET'])
 def add_song(name):
-    global song_pass
+    global song_queue
     print(f"Adding {name}")
-    song_pass.append(name)
+    song_queue['songs'].append(name)
+    print(song_queue['songs'])
     return jsonify({'success': True})
 
 
@@ -55,24 +60,39 @@ def playSong(track_url):
     
     browser.quit()
 
-def record_loop(songs):
+def record_loop(song_queue):
+    def currentSong():
+        return song_queue['current_song'][0]
+    def setCurrentSong(new_song):
+        song_queue['current_song'][0] = new_song
+    def clearCurrentSong():
+        setCurrentSong(None)
+
     time.sleep(3)
-    current_song = None
     while True:
-        print(f"Current songs: {songs}")
-        if current_song == None and len(songs) > 0:
-           current_song = songs[0]
-           songs.pop(0)
-           print(f"Starting to play {current_song}")
-           playSong(current_song)
-           current_song = None
+        songs = song_queue['songs']
+
+        print(f"Song queue len: {len(songs)}")
+        if currentSong() == None and len(songs) > 0:
+            setCurrentSong(songs[0])
+            songs.pop(0)
+            
+            print(f"Starting to play {currentSong()}")
+            playSong(currentSong())
+
+            clearCurrentSong()
+
         time.sleep(1)
 
 
 if __name__ == "__main__":
     with Manager() as manager:
-        song_pass = manager.list([])
-        p = Process(target=record_loop, args=(song_pass,))
+        song_queue = manager.dict()
+
+        song_queue['current_song'] = manager.list([None])
+        song_queue['songs'] = manager.list([])
+
+        p = Process(target=record_loop, args=(song_queue,))
         p.start()  
         app.run(debug=True, use_reloader=False)
         p.join()
