@@ -37,6 +37,17 @@ def add_song(track_url):
     print(song_queue['songs'])
     return jsonify({'success': True})
 
+@app.route('/remove_song/<track_key>', methods = ['GET'])
+def remove_song(track_key):
+    global song_queue
+    for s in song_queue['songs']:
+        if(int(s['key']) == int(track_key)):
+            song_queue['songs'].remove(s)
+            return jsonify({'success': True})
+        else:
+            print(f"{s['key']} != {track_key}")
+    return jsonify({'success': False})
+
 
 def getPlayerURL(track_url):
     url_to_query = f"https://soundcloud.com/oembed?url={track_url}&client_id={SOUNDCLOUD_ID}"
