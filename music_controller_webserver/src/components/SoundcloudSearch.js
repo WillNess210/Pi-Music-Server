@@ -90,6 +90,8 @@ const searchStyle = {
     width: "100%",
     height: "50px",
     fontSize: "30px",
+    textAlign: "center",
+    color: "gray",
 }
 
 SoundcloudSearch.propTypes = {

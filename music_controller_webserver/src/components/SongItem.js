@@ -14,18 +14,7 @@ class SongItem extends Component{
             textAlign: "center",
             display: "table-row",
             maxHeight: '100px',
-        };
-    }
-
-    getRemoveStyle = () => {
-        return {
-            background: this.props.current_song ? "#f4f4f4" : "red",
-            color: this.props.current_song ? "#f4f4f4" : "white",
-            height: "100%",
-            minWidth: "50px",
-            display: "table-cell",
-            verticalAlign: "middle",
-            fontSize: "30px",
+            minHeight: '75px',
         };
     }
 
@@ -72,6 +61,7 @@ const songImgStyle = {
 const songTitleStyle = {
     display: "table-cell",
     verticalAlign: "middle",
+    minHeight: '75px',
 }
 
 SongItem.propTypes = {
