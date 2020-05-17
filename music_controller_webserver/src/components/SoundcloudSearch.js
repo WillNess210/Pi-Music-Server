@@ -78,6 +78,7 @@ class SoundcloudSearch extends Component{
                     style={searchStyle}
                     value={this.state.current_search}
                     onChange={this.onChange}
+                    autocomplete="off"
                 />
                 <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong}/>
             </div>

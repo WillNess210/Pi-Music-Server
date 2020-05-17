@@ -7,6 +7,7 @@
     "react-dom": "^16.13.1",
     "react-scripts": "0.9.5"
   },
+  "proxy": "http://localhost:5000",
   "devDependencies": {},
   "scripts": {
     "start": "react-scripts start",
