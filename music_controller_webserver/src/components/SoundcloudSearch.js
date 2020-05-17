@@ -8,10 +8,11 @@ class SoundcloudSearch extends Component{
 
     state = {
         search: '',
+        current_search: '',
         songs: [],
     }
 
-    onChange = (e) => this.setState({'search': e.target.value});
+    onChange = (e) => this.setState({'current_search': e.target.value});
 
     createSongObject = (song, key) => {
         return {
@@ -47,6 +48,22 @@ class SoundcloudSearch extends Component{
         );
     };
 
+
+    componentDidMount(){
+        this.interval = setInterval(() => {
+            if(this.state.current_search !== this.state.search){
+                this.setState({
+                    search: this.state.current_search,
+                });
+                this.searchSoundcloud();
+            }
+        }, 2000);
+    }
+    
+    componentWillUnmount(){
+        clearInterval(this.interval)
+    }
+
     render(){
         return(
             <div>
@@ -54,13 +71,8 @@ class SoundcloudSearch extends Component{
                     type="text"
                     name="soundcloud_search"
                     style={searchStyle}
-                    value={this.state.search}
+                    value={this.state.current_search}
                     onChange={this.onChange}
-                />
-                <input
-                    type="submit"
-                    value="submit"
-                    onClick={this.searchSoundcloud}
                 />
                 <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong}/>
             </div>
