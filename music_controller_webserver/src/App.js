@@ -18,7 +18,7 @@ class App extends Component {
 
 
   updateState(){
-    axios.get('http://localhost:5000/songs').then(
+    axios.get('/api/songs').then(
       res => this.setState({player: res.data})
     );
   }
@@ -41,13 +41,13 @@ class App extends Component {
     });
 
     // change backend server state
-    axios.get(`http://localhost:5000/remove_song/${key}`).then(res =>
+    axios.get(`/api/remove_song/${key}`).then(res =>
     console.log(res.data)
     );
   }
 
   addSong = url => {
-    axios.get(`http://localhost:5000/add_song/url=${url}`).then(res =>
+    axios.get(`/api/add_song/url=${url}`).then(res =>
       console.log(res.data)
     );
   }

@@ -20,7 +20,7 @@ cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:5000"}})
 SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
 global_id_count = 0
 
-@app.route('/songs', methods=['GET'])
+@app.route('/api/songs', methods=['GET'])
 @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def get_songs():
    global song_queue
@@ -29,7 +29,7 @@ def get_songs():
    new_obj['songs'] = list(song_queue['songs'])
    return jsonify(new_obj)
 
-@app.route('/add_song/url=<path:track_url>', methods = ['GET'])
+@app.route('/api/add_song/url=<path:track_url>', methods = ['GET'])
 def add_song(track_url):
     global song_queue
     print(f"Adding {track_url}")
@@ -37,7 +37,7 @@ def add_song(track_url):
     print(song_queue['songs'])
     return jsonify({'success': True})
 
-@app.route('/remove_song/<track_key>', methods = ['GET'])
+@app.route('/api/remove_song/<track_key>', methods = ['GET'])
 def remove_song(track_key):
     global song_queue
     for s in song_queue['songs']:
