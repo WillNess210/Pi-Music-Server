@@ -12,7 +12,7 @@ class SongQueue extends Component{
         }
 
         this.props.songs.map((song) => (
-            rows.push(<SongItem key={song['key']} song_loaded={song_loaded(song)} current_song={false} song={song} song_mod={this.props.song_mod}/>)
+            rows.push(<SongItem key={song['key']} song_loaded={song_loaded(song)} current_song={false} song={song} song_mod={this.props.song_mod} queue_type={this.props.queue_type}/>)
         ));
 
         return (
@@ -27,6 +27,7 @@ SongQueue.propTypes = {
     songs: PropTypes.array.isRequired,
     current_song: PropTypes.object.isRequired,
     song_mod: PropTypes.func.isRequired,
+    queue_type: PropTypes.string.isRequired,
 }
 
 function song_loaded(song){

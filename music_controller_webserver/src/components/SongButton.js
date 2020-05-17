@@ -7,6 +7,8 @@ class SongButton extends Component{
             return <div onClick={this.props.button_func.bind(this, this.props.remove_key)} style={removeStyle}> x </div>
         }else if(this.props.button_type === "empty"){
             return <div style = {emptyStyle}></div>
+        }else if(this.props.button_type === "add"){
+            return <div onClick={this.props.button_func.bind(this, this.props.song_url)} style={addStyle}> + </div>
         }
         return <p> you messed up</p>
     }
@@ -15,6 +17,16 @@ class SongButton extends Component{
 
 const removeStyle = {
     background: "red",
+    color: "white",
+    height: "100%",
+    minWidth: "50px",
+    display: "table-cell",
+    verticalAlign: "middle",
+    fontSize: "30px",
+};
+
+const addStyle = {
+    background: "green",
     color: "white",
     height: "100%",
     minWidth: "50px",

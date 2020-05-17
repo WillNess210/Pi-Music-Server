@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import Header from "./components/layout/Header";
 import SongQueue from "./components/SongQueue";
+import SoundcloudSearch from './components/SoundcloudSearch';
 
 class App extends Component {
 
@@ -37,13 +38,20 @@ class App extends Component {
         "current_song": this.state.player["current_song"],
         "songs": [...this.state.player["songs"].filter(song => song.key !== key)]
       }
-    })
+    });
 
     // change backend server state
     axios.get(`http://localhost:5000/remove_song/${key}`).then(res =>
     console.log(res.data)
     );
   }
+
+  addSong = url => {
+    axios.get(`http://localhost:5000/add_song/url=${url}`).then(res =>
+      console.log(res.data)
+    );
+  }
+
 
   render() {
     return (
@@ -53,12 +61,12 @@ class App extends Component {
             <Header />
             <Route exact path="/" render={props => (
               <React.Fragment>
-                <SongQueue songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong}/>
+                <SongQueue queue_type='queue' songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong}/>
               </React.Fragment>
             )}/>
             <Route exact path = "/add" render={props => (
               <React.Fragment>
-
+                <SoundcloudSearch client_id={process.env.REACT_APP_SOUNDCLOUD_ID} add_song={this.addSong}/>
               </React.Fragment>
             )}/>
           </div>

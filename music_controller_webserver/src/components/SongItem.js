@@ -50,18 +50,16 @@ class SongItem extends Component{
         }
 
         const renderButton = () => {
-            return this.props.current_song ? <SongButton button_type="empty"/> : <SongButton button_type="remove" button_func={this.props.song_mod} remove_key={this.props.song.key}/>;
+            return this.props.current_song ? <SongButton button_type="empty"/> : 
+            this.props.queue_type === "queue" ? <SongButton button_type="remove" button_func={this.props.song_mod} remove_key={this.props.song.key}/> : 
+            <SongButton button_type="add" song_url={this.props.song.url} button_func={this.props.song_mod}/>;
         }
 
         return renderSong();
     }
 }
 
-SongItem.propTypes = {
-    song: PropTypes.object.isRequired,
-    current_song: PropTypes.bool.isRequired,
-    song_loaded: PropTypes.bool.isRequired,
-}
+
 
 // left
 const songImgStyle = {
@@ -74,6 +72,13 @@ const songImgStyle = {
 const songTitleStyle = {
     display: "table-cell",
     verticalAlign: "middle",
+}
+
+SongItem.propTypes = {
+    song: PropTypes.object.isRequired,
+    current_song: PropTypes.bool.isRequired,
+    song_loaded: PropTypes.bool.isRequired,
+    queue_type: PropTypes.string.isRequired,
 }
 
 export default SongItem;
