@@ -8,23 +8,35 @@ class SongQueue extends Component{
         var rows = [];
         
         if(this.props.current_song != null){
-            rows.push(<SongItem key={0} song_loaded={song_loaded(this.props.current_song)} current_song={true} song={this.props.current_song} />)
+            rows.push(<SongItem key={this.props.current_song['key']} song_loaded={song_loaded(this.props.current_song)} current_song={true} song={this.props.current_song}/>)
         }
 
-        this.props.songs.map((song, key) => (
-            rows.push(<SongItem key={key+1} song_loaded={song_loaded(song)} current_song={false} song={song} />)
+        this.props.songs.map((song) => (
+            rows.push(<SongItem key={song['key']} song_loaded={song_loaded(song)} current_song={false} song={song} song_mod={this.props.song_mod}/>)
         ));
 
-        return rows;
+        return (
+            <div style = {songQueueStyle}> 
+                {rows}
+            </div>
+        );
     }
 }
 
 SongQueue.propTypes = {
     songs: PropTypes.array.isRequired,
+    current_song: PropTypes.object.isRequired,
+    song_mod: PropTypes.func.isRequired,
 }
 
 function song_loaded(song){
     return 'title' in song;
+}
+
+const songQueueStyle = {
+    display: "table",
+    width: "100%",
+    borderCollapse: "collapse",
 }
 
 export default SongQueue;

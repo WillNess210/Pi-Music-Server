@@ -24,11 +24,25 @@ class App extends Component {
 
   componentDidMount(){
     this.updateState()
-    //this.interval = setInterval(() => this.updateState(), 1000);
+    this.interval = setInterval(() => this.updateState(), 1000);
   }
 
   componentWillUnmount(){
     clearInterval(this.interval)
+  }
+
+  removeSong = key => {
+    this.setState({
+      player: {
+        "current_song": this.state.player["current_song"],
+        "songs": [...this.state.player["songs"].filter(song => song.key !== key)]
+      }
+    })
+
+    // change backend server state
+    axios.get(`http://localhost:5000/remove_song/${key}`).then(res =>
+    console.log(res.data)
+    );
   }
 
   render() {
@@ -39,7 +53,12 @@ class App extends Component {
             <Header />
             <Route exact path="/" render={props => (
               <React.Fragment>
-                <SongQueue songs={this.state.player['songs']} current_song={this.state.player['current_song']}/>
+                <SongQueue songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong}/>
+              </React.Fragment>
+            )}/>
+            <Route exact path = "/add" render={props => (
+              <React.Fragment>
+
               </React.Fragment>
             )}/>
           </div>
