@@ -7,8 +7,7 @@ import os
 import soundcloud
 import json
 
-from backend_lib import SongPlayer
-from backend_lib import Song
+from backend_lib import Song, SongPlayer, generateSoundcloudSongObject
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -25,10 +24,10 @@ song_player = SongPlayer(SOUNDCLOUD_ID)
 def get_songs():
     global song_queue
     new_obj = {}
-    new_obj['current_song'] = song_queue['current_song'][0]
+    new_obj['current_song'] = None if song_queue['current_song'][0] == None else song_queue['current_song'][0].dictRep()
     if new_obj['current_song'] != None:
         new_obj['current_song']['playing'] = song_queue['playing']
-    new_obj['songs'] = list(song_queue['songs'])
+    new_obj['songs'] = list(s.dictRep() for s in song_queue['songs'])
     new_obj['rep'] = ('1' if new_obj['current_song'] != None else '0') + ('1' if song_queue['playing'] else '0')
     for song in new_obj['songs']:
         new_obj['rep'] += str(len(song['url']))
@@ -39,7 +38,7 @@ def get_songs():
 def add_song(track_url):
     global song_queue
     print(f"Adding {track_url}")
-    song_queue['songs'].append(createSongObjectFromSoundcloud(track_url))
+    song_queue['songs'].append(generateSoundcloudSongObject(SOUNDCLOUD_ID, track_url))
     print(song_queue['songs'])
     return jsonify({'success': True})
 
@@ -47,7 +46,7 @@ def add_song(track_url):
 def remove_song(track_key):
     global song_queue
     for s in song_queue['songs']:
-        if(int(s['key']) == int(track_key)):
+        if(int(s.key) == int(track_key)):
             song_queue['songs'].remove(s)
             return jsonify({'success': True})
         else:
@@ -70,12 +69,7 @@ def toggle_pause_play():
 @app.route('/will_likes', methods = ['GET'])
 def return_will_likes():
     global will_songs
-    return {'songs': will_songs}
-
-def getPlayerURL(track_url):
-    url_to_query = f"https://soundcloud.com/oembed?url={track_url}&client_id={SOUNDCLOUD_ID}"
-    resp = ET.fromstring(requests.get(url_to_query).content)
-    return resp.find('html').text.split("src=\"")[1].split("\"><")[0]
+    return {'songs': [s.dictRep() for s in will_songs]}
 
 def record_loop(song_queue):
     global song_player
@@ -98,31 +92,12 @@ def record_loop(song_queue):
             
             print(f"Starting to play {currentSong()}")
             song_queue["playing"] = True
-            cur_song = currentSong()
-            new_song_obj = Song('soundcloud', cur_song['url'])
-            song_player.playSong(song_queue, new_song_obj)
+            song_player.playSong(song_queue, currentSong())
 
             clearCurrentSong()
             song_queue["playing"] = False
 
         time.sleep(1)
-
-def createSongObject(url, title, artist, artwork_url):
-    global global_id_count
-    to_ret = {
-        'url': url,
-        'key': global_id_count,
-        'title': title,
-        'artist': artist,
-        'artwork_url': artwork_url,
-    }
-    global_id_count += 1
-    return to_ret
-
-def createSongObjectFromSoundcloud(soundcloud_url):
-    client = soundcloud.Client(client_id=SOUNDCLOUD_ID)
-    track = client.get('/resolve', url=soundcloud_url)
-    return createSongObject(soundcloud_url, track.title, track.user['username'], track.artwork_url)
 
 def loadWillsSongs():
     global will_songs
@@ -133,7 +108,8 @@ def loadWillsSongs():
     
     while True:
         for song in response['collection']:
-            will_songs.append(createSongObject(
+            will_songs.append(Song(
+                platform='soundcloud',
                 url=song["permalink_url"],
                 title=song["title"],
                 artist=song["user"]["username"],
