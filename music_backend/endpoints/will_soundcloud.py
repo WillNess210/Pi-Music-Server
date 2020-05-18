@@ -12,11 +12,11 @@ will_songs = []
 def createWillSoundcloudBluePrint(soundcloud_key):
     will_soundcloud = Blueprint('will_soundcloud', __name__)
 
+    loadWillsSongs(soundcloud_key)
+
     @will_soundcloud.route('/will_likes')
     def get_will_likes():
         global will_songs
-        if(len(will_songs) == 0):
-            loadWillsSongs(soundcloud_key)
         return {'songs': [s.dictRep() for s in will_songs]}
 
     return will_soundcloud
