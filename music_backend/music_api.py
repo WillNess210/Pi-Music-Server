@@ -28,6 +28,7 @@ def get_songs():
     global song_queue
     new_obj = {}
     new_obj['current_song'] = song_queue['current_song'][0]
+    new_obj['current_song']['playing'] = song_queue['playing']
     new_obj['songs'] = list(song_queue['songs'])
     new_obj['rep'] = '1' if new_obj['current_song'] != None else '0'
     for song in new_obj['songs']:
@@ -60,6 +61,12 @@ def skip_song():
     song_queue['skip_flag'] = True
     return jsonify({'success': song_queue['current_song'][0] != None})
 
+@app.route('/pause_play', methods = ['GET'])
+def toggle_pause_play():
+    global song_queue
+    if song_queue['current_song'][0] != None:
+        song_queue['playing'] = not song_queue['playing']
+    return jsonify({'success': song_queue['current_song'][0] != None})
 
 def getPlayerURL(track_url):
     url_to_query = f"https://soundcloud.com/oembed?url={track_url}&client_id={SOUNDCLOUD_ID}"
@@ -81,7 +88,7 @@ def playSong(track_url, song_queue):
         
     playButton = browser.find_elements_by_class_name('playButton')[0]
     def isSongOver():
-        return playButton.get_property('title') == 'Play' or song_queue['skip_flag']
+        return (playButton.get_property('title') == 'Play' and pause_flag not set) or song_queue['skip_flag']
     
     # clicking
     playButton.click()
@@ -112,9 +119,11 @@ def record_loop(song_queue):
             songs.pop(0)
             
             print(f"Starting to play {currentSong()}")
+            song_queue["playing"] = True
             playSong(currentSong()['url'], song_queue)
 
             clearCurrentSong()
+            song_queue["playing"] = False
 
         time.sleep(1)
 
@@ -140,6 +149,7 @@ if __name__ == "__main__":
             'current_song': manager.list([None]),
             'songs': manager.list([]),
             'skip_flag': False,
+            'playing': False,
         })
 
         p = Process(target=record_loop, args=(song_queue,))
