@@ -8,6 +8,7 @@ import soundcloud
 import json
 
 from backend_lib import Song, SongPlayer, generateSoundcloudSongObject
+from backend_lib import getInitDictionary, GlobalState
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -22,68 +23,55 @@ song_player = SongPlayer(SOUNDCLOUD_ID)
 
 @app.route('/songs', methods=['GET'])
 def get_songs():
-    global song_queue
-    new_obj = {}
-    new_obj['current_song'] = None if song_queue['current_song'][0] == None else song_queue['current_song'][0].dictRep()
-    if new_obj['current_song'] != None:
-        new_obj['current_song']['playing'] = song_queue['playing']
-    new_obj['songs'] = list(s.dictRep() for s in song_queue['songs'])
-    new_obj['rep'] = ('1' if new_obj['current_song'] != None else '0') + ('1' if song_queue['playing'] else '0')
-    for song in new_obj['songs']:
-        new_obj['rep'] += str(len(song['url']))
-    new_obj['rep'] = int(new_obj['rep'])
-    return jsonify(new_obj)
+    global global_state_obj
+    global_state = GlobalState(global_state_obj)
+    return jsonify(global_state.getSongsEndpointRep())
 
 @app.route('/add_song/url=<path:track_url>', methods = ['GET'])
 def add_song(track_url):
-    global song_queue
-    print(f"Adding {track_url}")
-    song_queue['songs'].append(generateSoundcloudSongObject(SOUNDCLOUD_ID, track_url))
-    print(song_queue['songs'])
+    global global_state_obj
+    global_state = GlobalState(global_state_obj)
+    global_state.addSong(generateSoundcloudSongObject(SOUNDCLOUD_ID, track_url))
     return jsonify({'success': True})
 
 @app.route('/remove_song/<track_key>', methods = ['GET'])
 def remove_song(track_key):
-    global song_queue
-    for s in song_queue['songs']:
-        if(int(s.key) == int(track_key)):
-            song_queue['songs'].remove(s)
-            return jsonify({'success': True})
-        else:
-            print(f"{s['key']} != {track_key}")
-    return jsonify({'success': False})
+    global global_state_obj
+    global_state = GlobalState(global_state_obj)
+    success = global_state.removeSong(track_key)
+    return jsonify({'success': success})
 
 @app.route('/skip_song', methods = ['GET'])
 def skip_song():
-    global song_queue
-    song_queue['skip_flag'] = True
-    return jsonify({'success': song_queue['current_song'][0] != None})
+    global global_state_obj
+    global_state_obj['skip_flag'] = True
+    return jsonify({'success': global_state_obj['current_song'][0] != None})
 
 @app.route('/pause_play', methods = ['GET'])
 def toggle_pause_play():
-    global song_queue
-    if song_queue['current_song'][0] != None:
-        song_queue['playing'] = not song_queue['playing']
-    return jsonify({'success': song_queue['current_song'][0] != None})
+    global global_state_obj
+    if global_state_obj['current_song'][0] != None:
+        global_state_obj['playing'] = not global_state_obj['playing']
+    return jsonify({'success': global_state_obj['current_song'][0] != None})
 
 @app.route('/will_likes', methods = ['GET'])
 def return_will_likes():
     global will_songs
     return {'songs': [s.dictRep() for s in will_songs]}
 
-def record_loop(song_queue):
+def record_loop(global_state_obj):
     global song_player
 
     def currentSong():
-        return song_queue['current_song'][0]
+        return global_state_obj['current_song'][0]
     def setCurrentSong(new_song):
-        song_queue['current_song'][0] = new_song
+        global_state_obj['current_song'][0] = new_song
     def clearCurrentSong():
         setCurrentSong(None)
 
     time.sleep(3)
     while True:
-        songs = song_queue['songs']
+        songs = global_state_obj['songs']
 
         print(f"Song queue len: {len(songs)}")
         if currentSong() == None and len(songs) > 0:
@@ -91,11 +79,11 @@ def record_loop(song_queue):
             songs.pop(0)
             
             print(f"Starting to play {currentSong()}")
-            song_queue["playing"] = True
-            song_player.playSong(song_queue, currentSong())
+            global_state_obj["playing"] = True
+            song_player.playSong(global_state_obj, currentSong())
 
             clearCurrentSong()
-            song_queue["playing"] = False
+            global_state_obj["playing"] = False
 
         time.sleep(1)
 
@@ -123,14 +111,9 @@ def loadWillsSongs():
 if __name__ == "__main__":
     loadWillsSongs()
     with Manager() as manager:
-        song_queue = manager.dict({
-            'current_song': manager.list([None]),
-            'songs': manager.list([]),
-            'skip_flag': False,
-            'playing': False,
-        })
+        global_state_obj = manager.dict(getInitDictionary(manager))
 
-        p = Process(target=record_loop, args=(song_queue,))
+        p = Process(target=record_loop, args=(global_state_obj,))
         p.start()  
         app.run(debug=True, use_reloader=False)
         p.join()
