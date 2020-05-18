@@ -29,7 +29,7 @@ class SoundcloudSearch extends Component{
     }
 
     searchSoundcloud = () => {
-        let search_url = `http://api.soundcloud.com/tracks?q=${encodeURIComponent(this.state.search)}&client_id=${this.props.client_id}`;
+        let search_url = `http://api.soundcloud.com/tracks?q=${encodeURIComponent(this.state.search)}&client_id=${this.props.client_id}&limit=50`;
         axios.get(search_url).then(
             res => {
                 let song_results = res.data;
