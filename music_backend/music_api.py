@@ -88,7 +88,7 @@ def playSong(track_url, song_queue):
         
     playButton = browser.find_elements_by_class_name('playButton')[0]
     def isSongOver():
-        return (playButton.get_property('title') == 'Play' and pause_flag not set) or song_queue['skip_flag']
+        return playButton.get_property('title') == 'Play' or song_queue['skip_flag']
     
     # clicking
     playButton.click()

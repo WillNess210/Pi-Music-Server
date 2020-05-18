@@ -20,7 +20,7 @@ class SongItem extends Component{
 
         const renderInteractButtons = () => {
             if(isSongCurrent){
-                return <SongButton button_type="current" play_func={this.props.play_func} skip_func={this.props.skip_func} />
+                return <SongButton button_type="current" play_func={this.props.play_func} skip_func={this.props.skip_func} cur_playing={this.props.song.playing}/>
             }else{
                 if(this.props.queue_type === "queue"){
                     return <SongButton button_type="remove" button_func={this.props.song_mod} remove_key={this.props.song.key}/>
