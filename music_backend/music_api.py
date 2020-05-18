@@ -5,6 +5,7 @@ from multiprocessing import Process, Manager, Value
 import requests
 import xml.etree.ElementTree as ET 
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from ctypes import c_char_p
 import os
 import soundcloud
@@ -22,7 +23,9 @@ SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
 global_id_count = 0
 will_songs = []
 
-browser = webdriver.Firefox()
+options = Options()
+options.headless = True
+browser = webdriver.Firefox(options=options)
 browser.get('http://google.com')
 
 @app.route('/songs', methods=['GET'])
