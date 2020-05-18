@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 import time
+from . global_state import GlobalState
 
 class SongPlayer:
 
@@ -18,10 +19,11 @@ class SongPlayer:
         self.browser.get(url)
 
     def playSong(self, global_obj, song):
+        global_state = GlobalState(global_obj)
         if(song.platform == 'soundcloud'):
-            self.playSongSoundcloud(global_obj, song)
+            self.playSongSoundcloud(global_state, song)
 
-    def playSongSoundcloud(self, global_obj, song):
+    def playSongSoundcloud(self, global_state, song):
         soundcloud_embed_url = song.fetchSoundcloudPlayerURL(self.soundcloud_key)
         self.browserGoTo(soundcloud_embed_url)
 
@@ -37,7 +39,7 @@ class SongPlayer:
         def getButtonTitle():
             return playButton.get_property('title')
         def isSongOver():
-            return (getButtonTitle() == 'Play' and global_obj['playing'] and lastPlaying) or global_obj['skip_flag']
+            return (getButtonTitle() == 'Play' and global_state.isPlaying() and lastPlaying) or global_state.shouldSkip()
         def checkAndDismissTeaser():
             teaserObjs = self.browser.find_elements_by_class_name('teaser__dismiss')
             if(len(teaserObjs) == 0):
@@ -51,17 +53,17 @@ class SongPlayer:
 
         while not isSongOver():
             # if user paused song, but we haven't paused yet - pause
-            if not global_obj['playing'] and getButtonTitle() != 'Play':
+            if not global_state.isPlaying() and getButtonTitle() != 'Play':
                 playButton.click()
             # if user resumed song, but we haven't resumed yet - resume
-            elif getButtonTitle() == 'Play' and global_obj['playing']:
+            elif getButtonTitle() == 'Play' and global_state.isPlaying():
                 # check if teaser popup exists & get rid of
                 checkAndDismissTeaser()
                 # resume song
                 playButton.click()
             
-            lastPlaying = global_obj['playing']
+            lastPlaying = global_state.isPlaying()
             time.sleep(1)
 
-        global_obj['skip_flag'] = False
+        global_state.songFinished()
         self.browserGoHome()

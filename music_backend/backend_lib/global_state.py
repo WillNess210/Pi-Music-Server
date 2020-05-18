@@ -11,6 +11,32 @@ class GlobalState:
     def getSongs(self):
         return list(self.global_state['songs'])
 
+    # skip handling
+
+    def shouldSkip(self):
+        return self.global_state['skip_flag']
+
+    def submitSkip(self):
+        if self.hasCurrentSong():
+            self.global_state['skip_flag'] = True
+            return True
+        return False
+
+    def songFinished(self):
+        self.global_state['skip_flag'] = False
+        self.global_state['playing'] = False
+
+    # play/pause handling
+
+    def isPlaying(self):
+        return self.global_state['playing']
+        
+    def togglePlaying(self):
+        if not self.hasCurrentSong():
+            return False
+        self.global_state['playing'] = not self.global_state['playing']
+        return True
+
     # /songs
     def getSongsEndpointRep(self):
         hasCurrentSong = self.hasCurrentSong()

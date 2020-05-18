@@ -30,29 +30,26 @@ def get_songs():
 @app.route('/add_song/url=<path:track_url>', methods = ['GET'])
 def add_song(track_url):
     global global_state_obj
-    global_state = GlobalState(global_state_obj)
-    global_state.addSong(generateSoundcloudSongObject(SOUNDCLOUD_ID, track_url))
+    GlobalState(global_state_obj).addSong(generateSoundcloudSongObject(SOUNDCLOUD_ID, track_url))
     return jsonify({'success': True})
 
 @app.route('/remove_song/<track_key>', methods = ['GET'])
 def remove_song(track_key):
     global global_state_obj
-    global_state = GlobalState(global_state_obj)
-    success = global_state.removeSong(track_key)
+    success = GlobalState(global_state_obj).removeSong(track_key)
     return jsonify({'success': success})
 
 @app.route('/skip_song', methods = ['GET'])
 def skip_song():
     global global_state_obj
-    global_state_obj['skip_flag'] = True
-    return jsonify({'success': global_state_obj['current_song'][0] != None})
+    success = GlobalState(global_state_obj).submitSkip()
+    return jsonify({'success': success})
 
 @app.route('/pause_play', methods = ['GET'])
 def toggle_pause_play():
     global global_state_obj
-    if global_state_obj['current_song'][0] != None:
-        global_state_obj['playing'] = not global_state_obj['playing']
-    return jsonify({'success': global_state_obj['current_song'][0] != None})
+    success = GlobalState(global_state_obj).togglePlaying()
+    return jsonify({'success': success})
 
 @app.route('/will_likes', methods = ['GET'])
 def return_will_likes():
