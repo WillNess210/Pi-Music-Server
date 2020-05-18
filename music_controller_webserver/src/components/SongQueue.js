@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 
 class SongQueue extends Component{
+    
     render(){
         var rows = [];
         

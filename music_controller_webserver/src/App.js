@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import Header from "./components/layout/Header";
 import SongQueue from "./components/SongQueue";
 import SoundcloudSearch from './components/SoundcloudSearch';
+import SoundcloudFavorites from './components/SoundcloudFavorites';
 
 class App extends Component {
 
@@ -38,21 +39,8 @@ class App extends Component {
       }
   };
 
-  updateWillSoundcloud(){
-    let queryURL = `http://api.soundcloud.com/users/79333503/favorites?client_id=${process.env.REACT_APP_SOUNDCLOUD_ID}`;
-    axios.get(queryURL).then(res => {
-      let song_results = res.data;
-      let song_objects = []
-      for(let i = 0; i < song_results.length; i++){
-          song_objects.push(this.createSongObject(song_results[i], i));
-      }
-      this.setState({will_soundcloud_songs: song_objects});
-    });
-  }
-
   componentDidMount(){
     this.updateState()
-    this.updateWillSoundcloud()
     this.interval = setInterval(() => this.updateState(), 1000);
   }
 
@@ -118,7 +106,7 @@ class App extends Component {
             )}/>
             <Route exact path = "/will" render={props => (
               <React.Fragment>
-                <SongQueue queue_type='add' songs={this.state.will_soundcloud_songs} current_song={null} song_mod={this.addSong}/>
+                <SoundcloudFavorites client_id={process.env.REACT_APP_SOUNDCLOUD_ID} soundcloud_user_id='79333503' add_song={this.addSong} createSongObject={this.createSongObject}/>
               </React.Fragment>
             )}/>
           </div>
