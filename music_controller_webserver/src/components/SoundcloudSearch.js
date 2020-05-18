@@ -17,16 +17,7 @@ class SoundcloudSearch extends Component{
         this.setState({'current_search': e.target.value});
         this.setState({'last_update': Date.now()});
     };
-
-    createSongObject = (song, key) => {
-        return {
-            url: song['permalink_url'],
-            key: key,
-            title: song['title'],
-            artist: song['user']['username'],
-            artwork_url: song['artwork_url'],
-        }
-    };
+    
 
     addSong = (track_url) => {
         // remove song locally
@@ -44,7 +35,7 @@ class SoundcloudSearch extends Component{
                 let song_results = res.data;
                 let song_objects = []
                 for(let i = 0; i < song_results.length; i++){
-                    song_objects.push(this.createSongObject(song_results[i], i));
+                    song_objects.push(this.props.createSongObject(song_results[i], i));
                 }
                 this.setState({songs: song_objects});
                 console.log(this.state.songs)

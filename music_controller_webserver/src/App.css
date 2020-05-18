@@ -45,3 +45,12 @@
 .skipButton:hover{
   background-color: #9e9e9e;
 }
+
+.hoverLink{
+  color: white;
+}
+
+.hoverLink:hover{
+  color: lightskyblue;
+  background-color: #252525;
+}

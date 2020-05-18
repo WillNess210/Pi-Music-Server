@@ -14,7 +14,8 @@ class App extends Component {
       "current_song": null,
       "songs": [],
       "rep": -1,
-    }
+    },
+    will_soundcloud_songs: []
   }
 
 
@@ -27,8 +28,31 @@ class App extends Component {
       });
   }
 
+  createSongObject = (song, key) => {
+      return {
+          url: song['permalink_url'],
+          key: key,
+          title: song['title'],
+          artist: song['user']['username'],
+          artwork_url: song['artwork_url'],
+      }
+  };
+
+  updateWillSoundcloud(){
+    let queryURL = `http://api.soundcloud.com/users/79333503/favorites?client_id=${process.env.REACT_APP_SOUNDCLOUD_ID}`;
+    axios.get(queryURL).then(res => {
+      let song_results = res.data;
+      let song_objects = []
+      for(let i = 0; i < song_results.length; i++){
+          song_objects.push(this.createSongObject(song_results[i], i));
+      }
+      this.setState({will_soundcloud_songs: song_objects});
+    });
+  }
+
   componentDidMount(){
     this.updateState()
+    this.updateWillSoundcloud()
     this.interval = setInterval(() => this.updateState(), 1000);
   }
 
@@ -89,7 +113,12 @@ class App extends Component {
             )}/>
             <Route exact path = "/add" render={props => (
               <React.Fragment>
-                <SoundcloudSearch client_id={process.env.REACT_APP_SOUNDCLOUD_ID} add_song={this.addSong}/>
+                <SoundcloudSearch client_id={process.env.REACT_APP_SOUNDCLOUD_ID} add_song={this.addSong} createSongObject={this.createSongObject}/>
+              </React.Fragment>
+            )}/>
+            <Route exact path = "/will" render={props => (
+              <React.Fragment>
+                <SongQueue queue_type='add' songs={this.state.will_soundcloud_songs} current_song={null} song_mod={this.addSong}/>
               </React.Fragment>
             )}/>
           </div>
