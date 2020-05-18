@@ -1,12 +1,10 @@
 import time
 from flask import Flask, jsonify
-from flask_cors import CORS, cross_origin
 from multiprocessing import Process, Manager, Value
 import requests
 import xml.etree.ElementTree as ET 
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-from ctypes import c_char_p
 import os
 import soundcloud
 import json
@@ -15,9 +13,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.config['CORS_HEADERS'] = 'Content-Type'
-
-cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:5000"}})
 
 SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
 global_id_count = 0
@@ -29,7 +24,6 @@ browser = webdriver.Firefox(options=options)
 browser.get('http://google.com')
 
 @app.route('/songs', methods=['GET'])
-@cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def get_songs():
     global song_queue
     new_obj = {}
