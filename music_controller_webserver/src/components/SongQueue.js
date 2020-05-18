@@ -8,7 +8,7 @@ class SongQueue extends Component{
         var rows = [];
         
         if(this.props.current_song != null){
-            rows.push(<SongItem key={this.props.current_song['key']} song_loaded={song_loaded(this.props.current_song)} current_song={true} song={this.props.current_song} play_func={null} skip_func={this.props.skip_song} queue_type={this.props.queue_type}/>)
+            rows.push(<SongItem key={this.props.current_song['key']} song_loaded={song_loaded(this.props.current_song)} current_song={true} song={this.props.current_song} play_func={this.props.play_pause_func} skip_func={this.props.skip_song} queue_type={this.props.queue_type}/>)
         }
 
         this.props.songs.map((song) => (

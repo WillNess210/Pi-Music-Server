@@ -24,7 +24,7 @@ class SongButton extends Component{
             return (
                 <div style={currentContainerStyle}>
                     <div className="greenButton" style = {buttonContainerStyle}>
-                        <div style = {xStyle}> > </div>
+                        <div onClick={this.props.play_func.bind(this)} style = {xStyle}> > </div>
                     </div>
                     <div className="skipButton" style = {buttonContainerStyle}>
                         <div onClick={this.props.skip_func.bind(this, this.props.song_url)} style={xStyle}> >> </div>
