@@ -1,24 +1,18 @@
 import time
 from flask import Flask, jsonify
 from multiprocessing import Process, Manager, Value
-import requests
-import os
-import soundcloud
-import json
 
 from .backend_lib import Song, SongPlayer, generateSoundcloudSongObject
-from .backend_lib import getInitDictionary, GlobalState
+from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey
 
 from .endpoints.will_soundcloud import createWillSoundcloudBluePrint
 
-from dotenv import load_dotenv
-load_dotenv()
-SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
+SOUNDCLOUD_KEY = getSoundcloudKey()
 
 app = Flask(__name__)
-app.register_blueprint(createWillSoundcloudBluePrint(SOUNDCLOUD_ID))
+app.register_blueprint(createWillSoundcloudBluePrint(SOUNDCLOUD_KEY))
 
-song_player = SongPlayer(SOUNDCLOUD_ID)
+song_player = SongPlayer(SOUNDCLOUD_KEY)
 
 @app.route('/songs', methods=['GET'])
 def get_songs():
@@ -29,7 +23,7 @@ def get_songs():
 @app.route('/add_song/url=<path:track_url>', methods = ['GET'])
 def add_song(track_url):
     global global_state_obj
-    GlobalState(global_state_obj).addSong(generateSoundcloudSongObject(SOUNDCLOUD_ID, track_url))
+    GlobalState(global_state_obj).addSong(generateSoundcloudSongObject(SOUNDCLOUD_KEY, track_url))
     return jsonify({'success': True})
 
 @app.route('/remove_song/<track_key>', methods = ['GET'])
