@@ -86,18 +86,35 @@ def playSong(track_url, song_queue):
     # ensure browser has loaded before clicking
     while(not isLoaded()):
         time.sleep(1)
-        
+    
+    lastPlaying = True
+    
     playButton = browser.find_elements_by_class_name('playButton')[0]
     def isSongOver():
-        return playButton.get_property('title') == 'Play' or song_queue['skip_flag']
+        return (playButton.get_property('title') == 'Play' and song_queue['playing'] and lastPlaying) or song_queue['skip_flag']
     
     # clicking
     playButton.click()
     time.sleep(1)
     
-    while not isSongOver():
-        time.sleep(1)
+    
 
+    while not isSongOver():
+        if not song_queue['playing'] and playButton.get_property('title') != 'Play':
+            print("PAUSING")
+            playButton.click()
+        elif playButton.get_property('title') == 'Play' and song_queue['playing']:
+            print("ATTEMPTING TO RESUME")
+            teaserDismisses = browser.find_elements_by_class_name('teaser__dismiss')
+            if len(teaserDismisses) > 0:
+                teaserDismiss = teaserDismisses[0]
+                teaserDismiss.click()
+                time.sleep(1)
+            playButton.click()
+        lastPlaying = song_queue['playing']
+        time.sleep(1)
+        print(f"Current State: {playButton.get_property('title')} song_queue={song_queue['playing']} last={lastPlaying}")
+    print("SONG OVER")
     song_queue['skip_flag'] = False
 
     browser.get('http://google.com')
