@@ -44,9 +44,10 @@ const navStyle = {
 const linkStyle = {
     textDecoration: 'none',
     fontSize: "25px",
-    display: 'inline',
+    display: 'inline-block',
     margin: '5px',
     padding: '5px',
+    border: '1px solid gray',
 };
   
   export default Header;

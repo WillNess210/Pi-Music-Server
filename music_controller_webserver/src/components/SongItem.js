@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Dimensions } from 'react-native';
+const { width, height } = Dimensions.get('window');
+
 
 import SongButton from "./SongButton";
 
@@ -10,29 +13,31 @@ class SongItem extends Component{
         let isSongLoaded = this.props.song_loaded;
         let isSongCurrent = this.props.current_song;
 
+        let fontSize = width < 700 ? 20 : 40;
+
         const renderImg = () => {
             return isSongLoaded ? <img src={this.props.song.artwork_url} style={songImgStyle}/> : null;
         }
 
         const renderTitle = () => {
-            return isSongLoaded ? <h1> {this.props.song.title} - {this.props.song.artist}</h1> : null;
+            return isSongLoaded ? <h1 style = {{fontSize: fontSize}}> {this.props.song.title} - {this.props.song.artist}</h1> : null;
         }
 
         const renderInteractButtons = () => {
             if(isSongCurrent){
-                return <SongButton button_type="current" play_func={this.props.play_func} skip_func={this.props.skip_func} cur_playing={this.props.song.playing}/>
+                return <SongButton button_type="current" play_func={this.props.play_func} skip_func={this.props.skip_func} cur_playing={this.props.song.playing} font_size={fontSize}/>
             }else{
                 if(this.props.queue_type === "queue"){
-                    return <SongButton button_type="remove" button_func={this.props.song_mod} remove_key={this.props.song.key}/>
+                    return <SongButton button_type="remove" button_func={this.props.song_mod} remove_key={this.props.song.key} font_size={fontSize}/>
                 }else{
-                    return <SongButton button_type="add" song_url={this.props.song.url} button_func={this.props.song_mod}/>
+                    return <SongButton button_type="add" song_url={this.props.song.url} button_func={this.props.song_mod} font_size={fontSize}/>
                 }
             }
         }
 
         return(
-            <div style = {rowStyle}>
-                <div>
+            <div style={rowStyle}>
+                <div style={songImgContainerStyle}>
                     {renderImg()}
                 </div>
                 <div>
@@ -47,24 +52,30 @@ class SongItem extends Component{
     }
 }
 
-const singleButtonStyle = {
-
-}
-
 const rowStyle = {
     display: 'grid',
     width: '100%',
-    gridTemplateColumns: "5% 85% 10%",
+    gridTemplateColumns: "80px calc(100% - 220px) 140px",
     background: "#f4f4f4",
     borderBottom: "1px #ccc dotted",
+    minHeight: '85px',
 }
 
 const songImgStyle = {
     margin: '5px',
     maxHeight: '75px',
-    display: "table-cell",
-    verticalAlign: "middle",
-    
+    position: 'absolute',
+    top: '0',
+    bottom: '0',
+    left: '0',
+    right: '0',
+    margin: 'auto',
+}
+
+const songImgContainerStyle = {
+    height: "100%",
+    width: "100%",
+    position: "relative",
 }
 
 SongItem.propTypes = {
