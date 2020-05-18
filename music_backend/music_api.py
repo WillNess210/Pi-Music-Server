@@ -25,11 +25,15 @@ browser.get('http://google.com')
 @app.route('/songs', methods=['GET'])
 @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
 def get_songs():
-   global song_queue
-   new_obj = {}
-   new_obj['current_song'] = song_queue['current_song'][0]
-   new_obj['songs'] = list(song_queue['songs'])
-   return jsonify(new_obj)
+    global song_queue
+    new_obj = {}
+    new_obj['current_song'] = song_queue['current_song'][0]
+    new_obj['songs'] = list(song_queue['songs'])
+    new_obj['rep'] = '1' if new_obj['current_song'] != None else '0'
+    for song in new_obj['songs']:
+        new_obj['rep'] += str(len(song['url']))
+    new_obj['rep'] = int(new_obj['rep'])
+    return jsonify(new_obj)
 
 @app.route('/add_song/url=<path:track_url>', methods = ['GET'])
 def add_song(track_url):

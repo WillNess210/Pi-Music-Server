@@ -12,15 +12,19 @@ class App extends Component {
   state = {
     player: {
       "current_song": null,
-      "songs": []
+      "songs": [],
+      "rep": -1,
     }
   }
 
 
   updateState(){
     axios.get('/songs').then(
-      res => this.setState({player: res.data})
-    );
+      res => {
+        if(this.state.player.rep != res.data.rep){
+          this.setState({player: res.data});
+        }
+      });
   }
 
   componentDidMount(){
@@ -36,7 +40,8 @@ class App extends Component {
     this.setState({
       player: {
         "current_song": this.state.player["current_song"],
-        "songs": [...this.state.player["songs"].filter(song => song.key !== key)]
+        "songs": [...this.state.player["songs"].filter(song => song.key !== key)],
+        "rep": this.state.player.rep,
       }
     });
 
@@ -53,6 +58,13 @@ class App extends Component {
   }
 
   skipSong = () => {
+    this.setState({
+      player: {
+        "current_song": null,
+        "songs": this.state.player.songs,
+        "rep": this.state.player.rep
+      }
+    })
     axios.get("/skip_song").then(res =>
       console.log(res.data)
     );
