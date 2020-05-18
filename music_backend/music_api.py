@@ -2,22 +2,21 @@ import time
 from flask import Flask, jsonify
 from multiprocessing import Process, Manager, Value
 import requests
-import xml.etree.ElementTree as ET 
 import os
 import soundcloud
 import json
 
-from backend_lib import Song, SongPlayer, generateSoundcloudSongObject
-from backend_lib import getInitDictionary, GlobalState
+from .backend_lib import Song, SongPlayer, generateSoundcloudSongObject
+from .backend_lib import getInitDictionary, GlobalState
+
+from .endpoints.will_soundcloud import createWillSoundcloudBluePrint
 
 from dotenv import load_dotenv
 load_dotenv()
+SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
 
 app = Flask(__name__)
-
-SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
-global_id_count = 0
-will_songs = []
+app.register_blueprint(createWillSoundcloudBluePrint(SOUNDCLOUD_ID))
 
 song_player = SongPlayer(SOUNDCLOUD_ID)
 
@@ -51,11 +50,6 @@ def toggle_pause_play():
     success = GlobalState(global_state_obj).togglePlaying()
     return jsonify({'success': success})
 
-@app.route('/will_likes', methods = ['GET'])
-def return_will_likes():
-    global will_songs
-    return {'songs': [s.dictRep() for s in will_songs]}
-
 def record_loop(global_state_obj):
     global song_player
 
@@ -84,29 +78,7 @@ def record_loop(global_state_obj):
 
         time.sleep(1)
 
-def loadWillsSongs():
-    global will_songs
-    page_size = 200
-
-    client = soundcloud.Client(client_id=SOUNDCLOUD_ID)
-    response = client.get('/users/79333503/favorites', limit=page_size, linked_partitioning=1).__dict__['obj']
-    
-    while True:
-        for song in response['collection']:
-            will_songs.append(Song(
-                platform='soundcloud',
-                url=song["permalink_url"],
-                title=song["title"],
-                artist=song["user"]["username"],
-                artwork_url=song["artwork_url"],
-            ))
-        if('next_href' not in response):
-            break
-        response = json.loads(requests.get(response['next_href']).content)
-    print(f"Finished adding wills liked songs, {len(will_songs)} total.")
-
 if __name__ == "__main__":
-    loadWillsSongs()
     with Manager() as manager:
         global_state_obj = manager.dict(getInitDictionary(manager))
 
