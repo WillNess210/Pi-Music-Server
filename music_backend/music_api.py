@@ -3,11 +3,12 @@ from flask import Flask, jsonify
 from multiprocessing import Process, Manager, Value
 import requests
 import xml.etree.ElementTree as ET 
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 import os
 import soundcloud
 import json
+
+from backend_lib import SongPlayer
+from backend_lib import Song
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -18,10 +19,7 @@ SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
 global_id_count = 0
 will_songs = []
 
-options = Options()
-options.headless = True
-browser = webdriver.Firefox(options=options)
-browser.get('http://google.com')
+song_player = SongPlayer(SOUNDCLOUD_ID)
 
 @app.route('/songs', methods=['GET'])
 def get_songs():
@@ -79,52 +77,9 @@ def getPlayerURL(track_url):
     resp = ET.fromstring(requests.get(url_to_query).content)
     return resp.find('html').text.split("src=\"")[1].split("\"><")[0]
 
-def playSong(track_url, song_queue):
-    global browser
-    player_url = getPlayerURL(track_url)
-    
-    browser.get(player_url)
-    
-    def isLoaded():
-        return len(browser.find_elements_by_class_name('playButton')) > 0
-                
-    # ensure browser has loaded before clicking
-    while(not isLoaded()):
-        time.sleep(1)
-    
-    lastPlaying = True
-    
-    playButton = browser.find_elements_by_class_name('playButton')[0]
-    def isSongOver():
-        return (playButton.get_property('title') == 'Play' and song_queue['playing'] and lastPlaying) or song_queue['skip_flag']
-    
-    # clicking
-    playButton.click()
-    time.sleep(1)
-    
-    
-
-    while not isSongOver():
-        if not song_queue['playing'] and playButton.get_property('title') != 'Play':
-            print("PAUSING")
-            playButton.click()
-        elif playButton.get_property('title') == 'Play' and song_queue['playing']:
-            print("ATTEMPTING TO RESUME")
-            teaserDismisses = browser.find_elements_by_class_name('teaser__dismiss')
-            if len(teaserDismisses) > 0:
-                teaserDismiss = teaserDismisses[0]
-                teaserDismiss.click()
-                time.sleep(1)
-            playButton.click()
-        lastPlaying = song_queue['playing']
-        time.sleep(1)
-        print(f"Current State: {playButton.get_property('title')} song_queue={song_queue['playing']} last={lastPlaying}")
-    print("SONG OVER")
-    song_queue['skip_flag'] = False
-
-    browser.get('http://google.com')
-
 def record_loop(song_queue):
+    global song_player
+
     def currentSong():
         return song_queue['current_song'][0]
     def setCurrentSong(new_song):
@@ -143,7 +98,9 @@ def record_loop(song_queue):
             
             print(f"Starting to play {currentSong()}")
             song_queue["playing"] = True
-            playSong(currentSong()['url'], song_queue)
+            cur_song = currentSong()
+            new_song_obj = Song('soundcloud', cur_song['url'])
+            song_player.playSong(song_queue, new_song_obj)
 
             clearCurrentSong()
             song_queue["playing"] = False
