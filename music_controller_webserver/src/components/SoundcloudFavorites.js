@@ -10,19 +10,6 @@ class SoundcloudFavorites extends Component{
         songs: [],
     };
 
-
-    updateWillSoundcloud(){
-        let queryURL = `http://api.soundcloud.com/users/${this.props.soundcloud_user_id}/favorites?client_id=${this.props.client_id}&limit=200`;
-        axios.get(queryURL).then(res => {
-          let song_results = res.data;
-          let song_objects = []
-          for(let i = 0; i < song_results.length; i++){
-              song_objects.push(this.props.createSongObject(song_results[i], i));
-          }
-          this.setState({songs: song_objects});
-        });
-      }
-
     addSong = (track_url) => {
         // remove song locally
         this.setState({
@@ -33,7 +20,9 @@ class SoundcloudFavorites extends Component{
     }
 
     componentDidMount(){
-        this.updateWillSoundcloud();
+        this.setState({
+            songs: this.props.songs,
+        })
     }
 
     render(){

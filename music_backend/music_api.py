@@ -8,6 +8,7 @@ from selenium import webdriver
 from ctypes import c_char_p
 import os
 import soundcloud
+import json
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -19,6 +20,8 @@ cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:5000"}})
 
 SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
 global_id_count = 0
+will_songs = []
+
 browser = webdriver.Firefox()
 browser.get('http://google.com')
 
@@ -41,7 +44,7 @@ def get_songs():
 def add_song(track_url):
     global song_queue
     print(f"Adding {track_url}")
-    song_queue['songs'].append(createSongObject(track_url))
+    song_queue['songs'].append(createSongObjectFromSoundcloud(track_url))
     print(song_queue['songs'])
     return jsonify({'success': True})
 
@@ -68,6 +71,11 @@ def toggle_pause_play():
     if song_queue['current_song'][0] != None:
         song_queue['playing'] = not song_queue['playing']
     return jsonify({'success': song_queue['current_song'][0] != None})
+
+@app.route('/will_likes', methods = ['GET'])
+def return_will_likes():
+    global will_songs
+    return {'songs': will_songs}
 
 def getPlayerURL(track_url):
     url_to_query = f"https://soundcloud.com/oembed?url={track_url}&client_id={SOUNDCLOUD_ID}"
@@ -145,23 +153,45 @@ def record_loop(song_queue):
 
         time.sleep(1)
 
-
-def createSongObject(soundcloud_url):
+def createSongObject(url, title, artist, artwork_url):
     global global_id_count
     to_ret = {
-        'url': soundcloud_url,
+        'url': url,
         'key': global_id_count,
+        'title': title,
+        'artist': artist,
+        'artwork_url': artwork_url,
     }
     global_id_count += 1
-    client = soundcloud.Client(client_id=SOUNDCLOUD_ID)
-    track = client.get('/resolve', url=soundcloud_url)
-    to_ret['title'] = track.title
-    to_ret['artist'] = track.user['username']
-    to_ret['artwork_url'] = track.artwork_url
-
     return to_ret
 
+def createSongObjectFromSoundcloud(soundcloud_url):
+    client = soundcloud.Client(client_id=SOUNDCLOUD_ID)
+    track = client.get('/resolve', url=soundcloud_url)
+    return createSongObject(soundcloud_url, track.title, track.user['username'], track.artwork_url)
+
+def loadWillsSongs():
+    global will_songs
+    page_size = 200
+
+    client = soundcloud.Client(client_id=SOUNDCLOUD_ID)
+    response = client.get('/users/79333503/favorites', limit=page_size, linked_partitioning=1).__dict__['obj']
+    
+    while True:
+        for song in response['collection']:
+            will_songs.append(createSongObject(
+                url=song["permalink_url"],
+                title=song["title"],
+                artist=song["user"]["username"],
+                artwork_url=song["artwork_url"],
+            ))
+        if('next_href' not in response):
+            break
+        response = json.loads(requests.get(response['next_href']).content)
+    print(f"Finished adding wills liked songs, {len(will_songs)} total.")
+
 if __name__ == "__main__":
+    loadWillsSongs()
     with Manager() as manager:
         song_queue = manager.dict({
             'current_song': manager.list([None]),

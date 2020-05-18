@@ -29,6 +29,16 @@ class App extends Component {
       });
   }
 
+  loadWillSoundcloudLikes(){
+    console.log("Added custom songs");
+    axios.get('/will_likes').then(
+      res => {
+        console.log(res);
+        this.setState({will_soundcloud_songs: res.data.songs});
+      }
+    )
+  }
+
   createSongObject = (song, key) => {
       return {
           url: song['permalink_url'],
@@ -40,7 +50,8 @@ class App extends Component {
   };
 
   componentDidMount(){
-    this.updateState()
+    this.loadWillSoundcloudLikes();
+    this.updateState();
     this.interval = setInterval(() => this.updateState(), 1000);
   }
 
@@ -106,7 +117,7 @@ class App extends Component {
             )}/>
             <Route exact path = "/will" render={props => (
               <React.Fragment>
-                <SoundcloudFavorites client_id={process.env.REACT_APP_SOUNDCLOUD_ID} soundcloud_user_id='79333503' add_song={this.addSong} createSongObject={this.createSongObject}/>
+                <SoundcloudFavorites songs={this.state.will_soundcloud_songs} add_song={this.addSong}/>
               </React.Fragment>
             )}/>
           </div>
