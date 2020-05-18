@@ -28,9 +28,10 @@ def get_songs():
     global song_queue
     new_obj = {}
     new_obj['current_song'] = song_queue['current_song'][0]
-    new_obj['current_song']['playing'] = song_queue['playing']
+    if new_obj['current_song'] != None:
+        new_obj['current_song']['playing'] = song_queue['playing']
     new_obj['songs'] = list(song_queue['songs'])
-    new_obj['rep'] = '1' if new_obj['current_song'] != None else '0'
+    new_obj['rep'] = ('1' if new_obj['current_song'] != None else '0') + ('1' if song_queue['playing'] else '0')
     for song in new_obj['songs']:
         new_obj['rep'] += str(len(song['url']))
     new_obj['rep'] = int(new_obj['rep'])
