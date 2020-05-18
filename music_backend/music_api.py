@@ -19,6 +19,8 @@ cors = CORS(app, resources={r"/foo": {"origins": "http://localhost:5000"}})
 
 SOUNDCLOUD_ID = os.getenv("SOUNDCLOUD_ID")
 global_id_count = 0
+browser = webdriver.Firefox()
+browser.get('http://google.com')
 
 @app.route('/songs', methods=['GET'])
 @cross_origin(origin='localhost',headers=['Content- Type','Authorization'])
@@ -61,8 +63,9 @@ def getPlayerURL(track_url):
     return resp.find('html').text.split("src=\"")[1].split("\"><")[0]
 
 def playSong(track_url, song_queue):
+    global browser
     player_url = getPlayerURL(track_url)
-    browser = webdriver.Firefox()
+    
     browser.get(player_url)
     
     def isLoaded():
@@ -85,7 +88,7 @@ def playSong(track_url, song_queue):
 
     song_queue['skip_flag'] = False
 
-    browser.quit()
+    browser.get('http://google.com')
 
 def record_loop(song_queue):
     def currentSong():
