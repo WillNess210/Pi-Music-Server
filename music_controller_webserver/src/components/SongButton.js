@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 
 class SongButton extends Component{
 
-    combineStyles(a, b){
-        return Object.assign({}, a, b);
-    };
+    
 
     render(){
         if(this.props.button_type === "remove"){
@@ -15,7 +13,7 @@ class SongButton extends Component{
                 </div>
             );
         }else if(this.props.button_type === "empty"){
-            return <div style = {this.combineStyles(buttonContainerStyle, emptyStyle)}></div>
+            return <div style = {Object.assign({}, buttonContainerStyle, emptyStyle)}></div>
         }else if(this.props.button_type === "add"){
             return (
                 <div className="greenButton" onClick={this.props.button_func.bind(this, this.props.song_url)} style={buttonContainerStyle}>
@@ -39,7 +37,6 @@ class SongButton extends Component{
     }
 }
 
-
 const currentContainerStyle = {
     display: "grid",
     gridTemplateColumns: "50% 50%",
@@ -62,18 +59,6 @@ const buttonContainerStyle = {
     width: "100%",
     fontSize: "40px",
     color: "white",
-};
-
-const playStyle = {
-    background: "gray",
-};
-
-const skipStyle = {
-    background: "green",
-};
-
-const addStyle = {
-    background: "green",
 };
 
 const emptyStyle = {
