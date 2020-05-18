@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-
 class SongButton extends Component{
 
     combineStyles(a, b){
@@ -11,7 +10,7 @@ class SongButton extends Component{
     render(){
         if(this.props.button_type === "remove"){
             return (
-                <div onClick={this.props.button_func.bind(this, this.props.remove_key)} style={this.combineStyles(buttonContainerStyle, removeStyle)}>
+                <div className="removeButton" onClick={this.props.button_func.bind(this, this.props.remove_key)} style={buttonContainerStyle}>
                     <div style={xStyle}>x</div>
                 </div>
             );
@@ -19,17 +18,17 @@ class SongButton extends Component{
             return <div style = {this.combineStyles(buttonContainerStyle, emptyStyle)}></div>
         }else if(this.props.button_type === "add"){
             return (
-                <div onClick={this.props.button_func.bind(this, this.props.song_url)} style={this.combineStyles(buttonContainerStyle, addStyle)}>
+                <div className="greenButton" onClick={this.props.button_func.bind(this, this.props.song_url)} style={buttonContainerStyle}>
                     <div style={xStyle}>+</div>
                 </div>
             );
         }else if(this.props.button_type === "current"){
             return (
                 <div style={currentContainerStyle}>
-                    <div style = {this.combineStyles(buttonContainerStyle, playStyle)}>
+                    <div className="greenButton" style = {buttonContainerStyle}>
                         <div style = {xStyle}> > </div>
                     </div>
-                    <div style = {this.combineStyles(buttonContainerStyle, skipStyle)}>
+                    <div className="skipButton" style = {buttonContainerStyle}>
                         <div onClick={this.props.skip_func.bind(this, this.props.song_url)} style={xStyle}> >> </div>
                     </div>
                 </div>
@@ -62,6 +61,7 @@ const buttonContainerStyle = {
     height: "100%",
     width: "100%",
     fontSize: "40px",
+    color: "white",
 };
 
 const playStyle = {
@@ -70,10 +70,6 @@ const playStyle = {
 
 const skipStyle = {
     background: "green",
-};
-
-const removeStyle = {
-    background: "red",
 };
 
 const addStyle = {
