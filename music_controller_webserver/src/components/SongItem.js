@@ -17,7 +17,7 @@ class SongItem extends Component{
             minHeight: '75px',
         };
     }
-
+   
     render(){
         let isSongLoaded = this.props.song_loaded;
         let isSongCurrent = this.props.current_song;
