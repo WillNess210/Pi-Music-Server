@@ -18,10 +18,11 @@ class SongPlayer:
     def browserGoTo(self, url):
         self.browser.get(url)
 
-    def playSong(self, global_obj, song):
-        global_state = GlobalState(global_obj)
+    def playSong(self, global_state, song):
+        global_state.songStarted()
         if(song.platform == 'soundcloud'):
             self.playSongSoundcloud(global_state, song)
+        global_state.songFinished()
 
     def playSongSoundcloud(self, global_state, song):
         soundcloud_embed_url = song.fetchSoundcloudPlayerURL(self.soundcloud_key)
@@ -65,5 +66,4 @@ class SongPlayer:
             lastPlaying = global_state.isPlaying()
             time.sleep(1)
 
-        global_state.songFinished()
         self.browserGoHome()

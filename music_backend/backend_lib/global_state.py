@@ -11,6 +11,12 @@ class GlobalState:
     def getSongs(self):
         return list(self.global_state['songs'])
 
+    def selectNextSong(self):
+        # removes first element in song list, sets it to current_song, and returns the song
+        next_song = self.global_state['songs'].pop(0)
+        self.global_state['current_song'][0] = next_song
+        return next_song
+
     # skip handling
 
     def shouldSkip(self):
@@ -22,7 +28,11 @@ class GlobalState:
             return True
         return False
 
+    def songStarted(self):
+        self.global_state['playing'] = True
+    
     def songFinished(self):
+        self.global_state['current_song'][0] = None
         self.global_state['skip_flag'] = False
         self.global_state['playing'] = False
 

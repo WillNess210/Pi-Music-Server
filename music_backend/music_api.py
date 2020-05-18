@@ -46,30 +46,15 @@ def toggle_pause_play():
 
 def record_loop(global_state_obj):
     global song_player
-
-    def currentSong():
-        return global_state_obj['current_song'][0]
-    def setCurrentSong(new_song):
-        global_state_obj['current_song'][0] = new_song
-    def clearCurrentSong():
-        setCurrentSong(None)
-
-    time.sleep(3)
+    global_state = GlobalState(global_state_obj)
+    time.sleep(2)
     while True:
-        songs = global_state_obj['songs']
-
+        songs = global_state.getSongs()
         print(f"Song queue len: {len(songs)}")
-        if currentSong() == None and len(songs) > 0:
-            setCurrentSong(songs[0])
-            songs.pop(0)
-            
-            print(f"Starting to play {currentSong()}")
-            global_state_obj["playing"] = True
-            song_player.playSong(global_state_obj, currentSong())
-
-            clearCurrentSong()
-            global_state_obj["playing"] = False
-
+        if len(songs) > 0:
+            current_song = global_state.selectNextSong()
+            print(f"Starting to play {current_song.title}")            
+            song_player.playSong(global_state, current_song)
         time.sleep(1)
 
 if __name__ == "__main__":
