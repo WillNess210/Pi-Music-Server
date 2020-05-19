@@ -61,7 +61,7 @@ class GlobalState:
         if hasCurrentSong:
             new_obj['current_song']['playing'] = self.global_state['playing']
         new_obj['songs'] = list(s.dictRep() for s in self.getSongs())
-        new_obj['rep'] = ('1' if hasCurrentSong else '0') + ('1' if self.global_state['playing'] else '0')
+        new_obj['rep'] = ('1' if hasCurrentSong else '0') + ('1' if self.global_state['playing'] else '0') + ('1' if self.isAutoPlayOn() else '0')
         for song in new_obj['songs']:
             new_obj['rep'] += str(len(song['url']))
         new_obj['rep'] = int(new_obj['rep'])
@@ -85,5 +85,5 @@ def getInitDictionary(manager):
         'songs': manager.list([]),
         'skip_flag': False,
         'playing': False,
-        'auto_play': True,
+        'auto_play': False,
     }

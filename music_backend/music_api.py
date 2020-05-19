@@ -44,7 +44,7 @@ def toggle_pause_play():
     success = GlobalState(global_state_obj).togglePlaying()
     return jsonify({'success': success})
 
-@app.route('/toggle_autplay', methods = ['GET'])
+@app.route('/toggle_autoplay', methods = ['GET'])
 def toggle_autoplay():
     global global_state_obj
     GlobalState(global_state_obj).toggleAutoPlay()

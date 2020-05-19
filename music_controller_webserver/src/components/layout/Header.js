@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
-function Header(){
-    const linkData = [
+class Header extends Component{
+
+    linkData = [
         {
             title: 'Queue',
             link: "/",
@@ -16,17 +18,22 @@ function Header(){
             link: "/will",
         },
     ]
-    return (
-        <header style={headerStyle}>
-            <h1> Music Player </h1>
-            <div style={navStyle}>
-                {linkData.map((linkObj, i) => {
-                    return <Link className="hoverLink" style={linkStyle} to={linkObj.link}>{linkObj.title}</Link>
-                })}
-            </div>
-            
-        </header>
-    )
+
+    render(){
+        return (
+            <header style={headerStyle}>
+                <h1> Music Player </h1>
+                <div style={navStyle}>
+                    {this.linkData.map((linkObj, i) => {
+                        return <Link className="hoverLink" style={linkStyle} to={linkObj.link}>{linkObj.title}</Link>
+                    })}
+                    <div className="hoverLink" style={
+                        Object.assign({}, linkStyle, {color: this.props.auto_play ? 'rgb(175, 255, 175)' : 'rgb(255, 150, 150)'})
+                    } onClick={this.props.toggle_auto_play.bind(this)}>Autoplay {this.props.auto_play ? "On" : "Off"}</div>
+                </div>
+            </header>
+        );
+    }
 }
 
 const headerStyle = {
@@ -48,6 +55,7 @@ const linkStyle = {
     margin: '5px',
     padding: '5px',
     border: '1px solid gray',
+    cursor: 'pointer',
 };
   
-  export default Header;
+export default Header;

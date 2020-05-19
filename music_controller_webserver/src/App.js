@@ -15,6 +15,7 @@ class App extends Component {
       "current_song": null,
       "songs": [],
       "rep": -1,
+      "auto_play": false,
     },
     will_soundcloud_songs: []
   }
@@ -65,12 +66,13 @@ class App extends Component {
         "current_song": this.state.player["current_song"],
         "songs": [...this.state.player["songs"].filter(song => song.key !== key)],
         "rep": this.state.player.rep,
+        "auto_play": this.state.player.auto_play,
       }
     });
 
     // change backend server state
     axios.get(`/remove_song/${key}`).then(res =>
-    console.log(res.data)
+      console.log(res.data)
     );
   }
 
@@ -85,7 +87,8 @@ class App extends Component {
       player: {
         "current_song": null,
         "songs": this.state.player.songs,
-        "rep": this.state.player.rep
+        "rep": this.state.player.rep,
+        "auto_play": this.state.player.auto_play,
       }
     })
     axios.get("/skip_song").then(res =>{
@@ -99,12 +102,26 @@ class App extends Component {
     });
   }
 
+  toggleAutoPlay = () => {
+    this.setState({
+      player: {
+        "current_song": this.state.player.current_song,
+        "songs": this.state.player.songs,
+        "rep": this.state.player.rep,
+        "auto_play": !this.state.player.auto_play,
+      }
+    })
+    axios.get("/toggle_autoplay").then(res => {
+      console.log(res.data);
+    });
+  }
+
   render() {
     return (
       <Router>
         <div className="App">
           <div className="container">
-            <Header />
+            <Header auto_play={this.state.player.auto_play} toggle_auto_play={this.toggleAutoPlay}/>
             <Route exact path="/" render={props => (
               <React.Fragment>
                 <SongQueue queue_type='queue' songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong} skip_song={this.skipSong} play_pause_func={this.togglePausePlay}/>
