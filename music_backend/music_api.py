@@ -5,7 +5,7 @@ from multiprocessing import Process, Manager, Value
 from .backend_lib import Song, SongPlayer, generateSoundcloudSongObject
 from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey
 
-from .endpoints.will_soundcloud import createWillSoundcloudBluePrint
+from .endpoints.will_soundcloud import createWillSoundcloudBluePrint, getRandomLikedSong
 
 SOUNDCLOUD_KEY = getSoundcloudKey()
 
@@ -44,6 +44,12 @@ def toggle_pause_play():
     success = GlobalState(global_state_obj).togglePlaying()
     return jsonify({'success': success})
 
+@app.route('/toggle_autplay', methods = ['GET'])
+def toggle_autoplay():
+    global global_state_obj
+    GlobalState(global_state_obj).toggleAutoPlay()
+    return jsonify({'success': True})
+
 def record_loop(global_state_obj):
     global song_player
     global_state = GlobalState(global_state_obj)
@@ -51,6 +57,8 @@ def record_loop(global_state_obj):
     while True:
         songs = global_state.getSongs()
         print(f"Song queue len: {len(songs)}")
+        if len(songs) == 0 and global_state.isAutoPlayOn():
+            global_state.addSong(getRandomLikedSong())
         if len(songs) > 0:
             current_song = global_state.selectNextSong()
             print(f"Starting to play {current_song.title}")            

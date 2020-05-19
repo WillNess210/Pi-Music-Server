@@ -2,6 +2,7 @@ from flask import Blueprint
 import soundcloud
 import json
 import requests
+import random
 
 from ..backend_lib import Song
 
@@ -41,3 +42,10 @@ def loadWillsSongs(soundcloud_key):
             break
         response = json.loads(requests.get(response['next_href']).content)
     print(f"Finished adding wills liked songs, {len(will_songs)} total.")
+
+
+def getRandomLikedSong():
+    global will_songs
+    if len(will_songs) == 0:
+        return None
+    return random.choice(will_songs)

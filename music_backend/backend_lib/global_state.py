@@ -14,6 +14,9 @@ class GlobalState:
     def isAutoPlayOn(self):
         return self.global_state['auto_play'] 
 
+    def toggleAutoPlay(self):
+        self.global_state['auto_play'] = not self.global_state['auto_play']
+
     def selectNextSong(self):
         # removes first element in song list, sets it to current_song, and returns the song
         next_song = self.global_state['songs'].pop(0)
@@ -62,6 +65,7 @@ class GlobalState:
         for song in new_obj['songs']:
             new_obj['rep'] += str(len(song['url']))
         new_obj['rep'] = int(new_obj['rep'])
+        new_obj['auto_play'] = self.isAutoPlayOn()
         return new_obj
     
     # /add_song
