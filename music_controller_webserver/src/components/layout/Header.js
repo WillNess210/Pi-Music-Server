@@ -14,7 +14,7 @@ class Header extends Component{
             link: "/add",
         },
         {
-            title: 'Will Soundcloud',
+            title: 'Will\'s Songs',
             link: "/will",
         },
     ]
