@@ -20,7 +20,7 @@ class SongItem extends Component{
         }
 
         const renderTitle = () => {
-            return isSongLoaded ? <h1 style = {{fontSize: fontSize}}> {this.props.song.title} - {this.props.song.artist}</h1> : null;
+            return isSongLoaded ? <h1 style = {{fontSize: fontSize}}> {this.props.song.title} - {this.props.song.artist}</h1> : <h1 style = {{fontSize: fontSize}}>{this.props.song.url}</h1>;
         }
 
         const renderInteractButtons = () => {
@@ -56,7 +56,7 @@ const rowStyle = {
     display: 'grid',
     width: '100%',
     gridTemplateColumns: "80px calc(100% - 220px) 140px",
-    background: "#f4f4f4",
+    background: "rgb(240, 240, 240)",
     borderBottom: "1px #ccc dotted",
     minHeight: '85px',
 }

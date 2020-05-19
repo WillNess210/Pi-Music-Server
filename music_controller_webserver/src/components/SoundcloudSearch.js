@@ -69,8 +69,9 @@ class SoundcloudSearch extends Component{
                     style={searchStyle}
                     value={this.state.current_search}
                     onChange={this.onChange}
-                    autocomplete="off"
+                    autoComplete="off"
                     autoFocus
+                    placeholder="Search For Song Here"
                 />
                 <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong}/>
             </div>
@@ -84,7 +85,8 @@ const searchStyle = {
     height: "50px",
     fontSize: "30px",
     textAlign: "center",
-    color: "gray",
+    color: "rgb(180, 180, 180)",
+    placeholderTextColor: "rgb(210, 210, 210)",
 }
 
 SoundcloudSearch.propTypes = {

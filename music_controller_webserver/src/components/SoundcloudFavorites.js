@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import SongQueue from "./SongQueue";
+import ShuffleItem from './ShuffleItem';
 
 class SoundcloudFavorites extends Component{
 
@@ -19,6 +20,11 @@ class SoundcloudFavorites extends Component{
         this.props.add_song(track_url);
     }
 
+    addRandom = () => {
+        let chosen_song = this.state["songs"][Math.floor(Math.random() * this.state["songs"].length)];
+        this.props.add_song(chosen_song.url);
+    }
+
     componentDidMount(){
         this.setState({
             songs: this.props.songs,
@@ -26,7 +32,8 @@ class SoundcloudFavorites extends Component{
     }
 
     render(){
-        return <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong}/>
+        let shuffle_item = <ShuffleItem add_random_song={this.addRandom}/>;
+        return <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong} prefix_songitem={shuffle_item}/>
     }
 
 }
