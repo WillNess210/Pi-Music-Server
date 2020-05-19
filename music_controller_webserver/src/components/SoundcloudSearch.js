@@ -85,7 +85,7 @@ const searchStyle = {
     height: "50px",
     fontSize: "30px",
     textAlign: "center",
-    color: "rgb(180, 180, 180)",
+    color: "rgb(130, 130, 130)",
     placeholderTextColor: "rgb(210, 210, 210)",
 }
 

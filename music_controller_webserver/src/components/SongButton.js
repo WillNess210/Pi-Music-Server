@@ -76,6 +76,7 @@ const buttonContainerStyle = {
     width: "100%",
     fontSize: "40px",
     color: "white",
+    cursor: 'pointer',
 };
 
 const emptyStyle = {

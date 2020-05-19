@@ -17,7 +17,7 @@ class ShuffleItem extends Component{
     render(){
         return(
             <div className='shuffleButton' style={rowStyle} onClick={this.props.add_random_song.bind(this)}>
-                <h1 style={this.textStyle()}>Add Random Song</h1>
+                <h1 style={this.textStyle()}>Add Random Song From Likes</h1>
             </div>
         );
 
@@ -31,6 +31,7 @@ const rowStyle = {
     textAlign: 'center',
     marginTop: '0px',
     display: 'table',
+    cursor: 'pointer',
 }
 
 export default ShuffleItem;
