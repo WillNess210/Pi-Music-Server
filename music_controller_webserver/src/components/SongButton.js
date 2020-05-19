@@ -54,10 +54,10 @@ const xStyle = {
     minHeight: "100%",
 };
 
-const skipImg = require('./res/skip.png')
-const playImg = require('./res/play.png')
-const pauseImg = require('./res/pause.png')
-const deleteImg = require('./res/delete.png')
+const skipImg = require('./res/skip_white.png')
+const playImg = require('./res/play_white.png')
+const pauseImg = require('./res/pause_white.png')
+const deleteImg = require('./res/delete_white.png')
 
 function getButtonStyle(img){
     return Object.assign({}, xStyle, {
