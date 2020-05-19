@@ -5,6 +5,7 @@ const { width, height } = Dimensions.get('window');
 
 
 import SongButton from "./SongButton";
+import SongItemTitle from "./SongItemTitle";
 
 class SongItem extends Component{
     
@@ -32,7 +33,7 @@ class SongItem extends Component{
         }
 
         const renderTitle = () => {
-            return isSongLoaded ? <h1 style = {{fontSize: fontSize}}> {this.props.song.title} - {this.props.song.artist}</h1> : <h1 style = {{fontSize: fontSize}}>{this.props.song.url}</h1>;
+            return isSongLoaded ? <SongItemTitle title={this.props.song.title} artist={this.props.song.artist}/> : <h1 style = {{fontSize: fontSize}}>{this.props.song.url}</h1>;
         }
 
         const renderInteractButtons = () => {
