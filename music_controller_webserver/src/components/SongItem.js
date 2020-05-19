@@ -8,12 +8,24 @@ import SongButton from "./SongButton";
 
 class SongItem extends Component{
     
+    rowStyle = () => {
+        return {
+            display: 'grid',
+            width: '100%',
+            gridTemplateColumns: width < 700 ? "80px calc(100% - 220px) 140px" : "80px calc(100% - 260px) 180px",
+            background: "rgb(240, 240, 240)",
+            borderBottom: "1px #ccc dotted",
+            minHeight: '85px',
+        }
+    };
    
     render(){
         let isSongLoaded = this.props.song_loaded;
         let isSongCurrent = this.props.current_song;
 
         let fontSize = width < 700 ? 20 : 40;
+
+        
 
         const renderImg = () => {
             return isSongLoaded ? <img src={this.props.song.artwork_url} style={songImgStyle}/> : null;
@@ -36,7 +48,7 @@ class SongItem extends Component{
         }
 
         return(
-            <div style={rowStyle}>
+            <div style={this.rowStyle()}>
                 <div style={songImgContainerStyle}>
                     {renderImg()}
                 </div>
@@ -50,15 +62,6 @@ class SongItem extends Component{
         );
 
     }
-}
-
-const rowStyle = {
-    display: 'grid',
-    width: '100%',
-    gridTemplateColumns: "80px calc(100% - 220px) 140px",
-    background: "rgb(240, 240, 240)",
-    borderBottom: "1px #ccc dotted",
-    minHeight: '85px',
 }
 
 const songImgStyle = {

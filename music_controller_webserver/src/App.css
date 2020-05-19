@@ -6,11 +6,11 @@
 }
 
 .greenButton{
-  background-color: #00ff00;
+  background-color: #00e400;
 }
 
 .greenButton:hover{
-  background-color: #00c700;
+  background-color: #00c300;
 }
 
 .skipButton{
