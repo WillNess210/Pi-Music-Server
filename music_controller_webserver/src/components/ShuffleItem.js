@@ -11,6 +11,7 @@ class ShuffleItem extends Component{
             fontSize: fontSize,
             display: 'table-cell',
             verticalAlign: 'middle',
+            color: 'rgb(75, 75, 75)',
         }
     }
    
