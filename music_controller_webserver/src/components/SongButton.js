@@ -9,7 +9,7 @@ class SongButton extends Component{
         if(this.props.button_type === "remove"){
             return (
                 <div className="removeButton" onClick={this.props.button_func.bind(this, this.props.remove_key)} style={buttonContainerStyle}>
-                    <div style={xStyle}>x</div>
+                    <div style={getButtonStyle(deleteImg)}></div>
                 </div>
             );
         }else if(this.props.button_type === "empty"){
@@ -21,13 +21,14 @@ class SongButton extends Component{
                 </div>
             );
         }else if(this.props.button_type === "current"){
+
             return (
                 <div style={currentContainerStyle}>
                     <div className="greenButton" style = {buttonContainerStyle}>
-                        <div onClick={this.props.play_func.bind(this)} style = {xStyle}> {this.props.cur_playing ? '||' : '>'} </div>
+                        <div onClick={this.props.play_func.bind(this)} style = {this.props.cur_playing ? getButtonStyle(pauseImg) : getButtonStyle(playImg)}></div>
                     </div>
                     <div className="skipButton" style = {buttonContainerStyle}>
-                        <div onClick={this.props.skip_func.bind(this, this.props.song_url)} style={xStyle}> >> </div>
+                        <div onClick={this.props.skip_func.bind(this, this.props.song_url)} style={getButtonStyle(skipImg)}></div>
                     </div>
                 </div>
                 
@@ -44,6 +45,7 @@ const currentContainerStyle = {
     height: "100%",
 };
 
+
 const xStyle = {
     display: "table-cell",
     verticalAlign: "middle",
@@ -51,6 +53,21 @@ const xStyle = {
     minWidth: "100%",
     minHeight: "100%",
 };
+
+const skipImg = require('./res/skip.png')
+const playImg = require('./res/play.png')
+const pauseImg = require('./res/pause.png')
+const deleteImg = require('./res/delete.png')
+
+function getButtonStyle(img){
+    return Object.assign({}, xStyle, {
+        backgroundImage: `url(${img})`,
+        backgroundSize: "100%",
+        backgroundPosition: "center center",
+        backgroundRepeat: "no-repeat",
+    });
+}
+
 
 const buttonContainerStyle = {
     display: "table",
