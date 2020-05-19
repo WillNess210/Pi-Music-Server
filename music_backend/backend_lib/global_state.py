@@ -11,6 +11,9 @@ class GlobalState:
     def getSongs(self):
         return list(self.global_state['songs'])
 
+    def isAutoPlayOn(self):
+        return self.global_state['auto_play'] 
+
     def selectNextSong(self):
         # removes first element in song list, sets it to current_song, and returns the song
         next_song = self.global_state['songs'].pop(0)
@@ -78,4 +81,5 @@ def getInitDictionary(manager):
         'songs': manager.list([]),
         'skip_flag': False,
         'playing': False,
+        'auto_play': True,
     }
