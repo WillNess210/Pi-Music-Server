@@ -1,4 +1,4 @@
-from flask import Flask, Blueprint, render_template, url_for, json
+from flask import Flask, Blueprint, render_template, url_for, jsonify
 import soundcloud
 import json
 import requests
@@ -19,7 +19,7 @@ def createWillSoundcloudBluePrint():
     @will_soundcloud.route('/will_likes')
     def get_will_likes():
         global will_songs
-        return {'songs': [s.dictRep() for s in will_songs]}
+        return jsonify({'songs': [s.dictRep() for s in will_songs]})
 
     return will_soundcloud
 
