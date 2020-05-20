@@ -10,7 +10,7 @@ from .endpoints.will_soundcloud import createWillSoundcloudBluePrint, getRandomL
 SOUNDCLOUD_KEY = getSoundcloudKey()
 
 app = Flask(__name__)
-app.register_blueprint(createWillSoundcloudBluePrint(SOUNDCLOUD_KEY))
+app.register_blueprint(createWillSoundcloudBluePrint())
 
 song_player = SongPlayer(SOUNDCLOUD_KEY)
 

@@ -1,19 +1,20 @@
-from flask import Blueprint
+from flask import Flask, Blueprint, render_template, url_for, json
 import soundcloud
 import json
 import requests
 import random
+import os
+
 
 from ..backend_lib import Song
-
 
 will_songs = []
 
 
-def createWillSoundcloudBluePrint(soundcloud_key):
+def createWillSoundcloudBluePrint():
     will_soundcloud = Blueprint('will_soundcloud', __name__)
 
-    loadWillsSongs(soundcloud_key)
+    loadWillsSongs()
 
     @will_soundcloud.route('/will_likes')
     def get_will_likes():
@@ -22,26 +23,23 @@ def createWillSoundcloudBluePrint(soundcloud_key):
 
     return will_soundcloud
 
-def loadWillsSongs(soundcloud_key):
+def loadWillsSongs():
     global will_songs
-    page_size = 200
 
-    client = soundcloud.Client(client_id=soundcloud_key)
-    response = client.get('/users/79333503/favorites', limit=page_size, linked_partitioning=1).__dict__['obj']
-    
-    while True:
-        for song in response['collection']:
-            will_songs.append(Song(
-                platform='soundcloud',
-                url=song["permalink_url"],
-                title=song["title"],
-                artist=song["user"]["username"],
-                artwork_url=song["artwork_url"],
-            ))
-        if('next_href' not in response):
-            break
-        response = json.loads(requests.get(response['next_href']).content)
-    print(f"Finished adding wills liked songs, {len(will_songs)} total.")
+    SITE_ROOT = os.path.realpath(os.path.dirname(__file__))
+    json_url = os.path.join(SITE_ROOT, "", "res/wills_likes.json")
+    will_likes = json.load(open(json_url))
+
+    for song in will_likes:
+        will_songs.append(
+            Song(
+                platform=song['platform'],
+                url=song['url'],
+                title=song['title'],
+                artist=song['artist'],
+                artwork_url=song['artwork_url'],
+            )
+        )
 
 
 def getRandomLikedSong():
