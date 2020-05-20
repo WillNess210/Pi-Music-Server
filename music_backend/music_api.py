@@ -8,8 +8,8 @@ from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey, get_e
 from .endpoints.will_soundcloud import createWillSoundcloudBluePrint, getRandomLikedSong
 
 SOUNDCLOUD_KEY = getSoundcloudKey()
-HOST_VAL = get_env_val('host')
-
+HOST_VAL = get_env_val('HOST')
+print(f'Attempting to start on {HOST_VAL}')
 
 app = Flask(__name__)
 app.register_blueprint(createWillSoundcloudBluePrint())
