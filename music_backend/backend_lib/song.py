@@ -27,6 +27,13 @@ class Song:
         return self.__dict__
 
 def generateSoundcloudSongObject(soundcloud_key, track_url):
-    client = soundcloud.Client(client_id=soundcloud_key)
-    track = client.get('/resolve', url=track_url)
-    return Song('soundcloud', track_url, track.title, track.user['username'], track.artwork_url)
+    url_to_query = f"https://soundcloud.com/oembed?url={track_url}&client_id={soundcloud_key}"
+    resp = ET.fromstring(requests.get(url_to_query).content)
+    track_title_artist_split = resp.find('title').text.split(' by ')
+    track_title = track_title_artist_split[0]
+    track_artist = track_title_artist_split[1]
+    track_artwork_url = resp.find('thumbnail-url').text
+
+    to_ret = Song('soundcloud', track_url, track_title, track_artist, track_artwork_url)
+    print(to_ret.__dict__)
+    return to_ret
