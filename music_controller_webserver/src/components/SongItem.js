@@ -33,7 +33,7 @@ class SongItem extends Component{
         }
 
         const renderTitle = () => {
-            return isSongLoaded ? <SongItemTitle title={this.props.song.title} artist={this.props.song.artist}/> : <h1 style = {{fontSize: fontSize}}>{this.props.song.url}</h1>;
+            return isSongLoaded ? <SongItemTitle title={this.props.song.title} artist={this.props.song.artist} font_size={fontSize}/> : <h1 style = {{fontSize: fontSize}}>{this.props.song.url}</h1>;
         }
 
         const renderInteractButtons = () => {
