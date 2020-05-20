@@ -3,11 +3,13 @@ from flask import Flask, jsonify
 from multiprocessing import Process, Manager, Value
 
 from .backend_lib import Song, SongPlayer, generateSoundcloudSongObject
-from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey
+from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey, get_env_val
 
 from .endpoints.will_soundcloud import createWillSoundcloudBluePrint, getRandomLikedSong
 
 SOUNDCLOUD_KEY = getSoundcloudKey()
+HOST_VAL = get_env_val('host')
+
 
 app = Flask(__name__)
 app.register_blueprint(createWillSoundcloudBluePrint())
@@ -71,5 +73,5 @@ if __name__ == "__main__":
 
         p = Process(target=record_loop, args=(global_state_obj,))
         p.start()  
-        app.run(debug=True, use_reloader=False)
+        app.run(debug=True, use_reloader=False, host=HOST_VAL)
         p.join()
