@@ -6,9 +6,8 @@ class SongSearcher(Browser):
     def __init__(self, headless=True):
         super().__init__(headless=headless, landing_page='https://soundcloud.com/search')
        	while(len(self.returnElementsByCSS('.searchOptions__navigationLink')) == 0):
-               time.sleep(1)
-    
-	    self.clickOnElement(None, '.searchOptions__navigationLink', i=2, timeout_seconds=30)
+            time.sleep(1)
+        self.clickOnElement(None, '.searchOptions__navigationLink', i=2, timeout_seconds=30)
         self.searching = False
         
     def searchFor(self, search_term):
