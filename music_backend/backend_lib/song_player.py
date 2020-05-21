@@ -1,22 +1,12 @@
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
 import time
 from . global_state import GlobalState
+from . browser_control import Browser
 
-class SongPlayer:
+class SongPlayer(Browser):
 
     def __init__(self, soundcloud_key, headless=True):
-        options = Options()
-        options.headless = headless
-        self.browser = webdriver.Firefox(options=options)
-        self.browserGoHome()
+        super().__init__(headless=headless)
         self.soundcloud_key = soundcloud_key
-
-    def browserGoHome(self):
-        self.browserGoTo('http://google.com')
-
-    def browserGoTo(self, url):
-        self.browser.get(url)
 
     def playSong(self, global_state, song):
         global_state.songStarted()
@@ -26,26 +16,18 @@ class SongPlayer:
 
     def playSongSoundcloud(self, global_state, song):
         soundcloud_embed_url = song.fetchSoundcloudPlayerURL(self.soundcloud_key)
-        self.browserGoTo(soundcloud_embed_url)
+        self.goToURL(soundcloud_embed_url)
+        
+        playButton = self.returnElementByCSS('.playButton')
+        lastPlaying = True # always initially playing
 
-        def isLoaded():
-            return len(self.browser.find_elements_by_class_name('playButton')) > 0
-
-        while(not isLoaded()):
-            time.sleep(1)
-
-        lastPlaying = True
-
-        playButton = self.browser.find_elements_by_class_name('playButton')[0]
         def getButtonTitle():
             return playButton.get_property('title')
         def isSongOver():
             return (getButtonTitle() == 'Play' and global_state.isPlaying() and lastPlaying) or global_state.shouldSkip()
         def checkAndDismissTeaser():
-            teaserObjs = self.browser.find_elements_by_class_name('teaser__dismiss')
-            if(len(teaserObjs) == 0):
-                return
-            teaserObj = teaserObjs[0]
+            teaserObj = self.returnElementByCSS('teaser__dismiss', timeout_seconds=0)
+            if teaserObj == None: return
             teaserObj.click()
             time.sleep(1)
 
@@ -65,5 +47,3 @@ class SongPlayer:
             
             lastPlaying = global_state.isPlaying()
             time.sleep(1)
-
-        self.browserGoHome()
