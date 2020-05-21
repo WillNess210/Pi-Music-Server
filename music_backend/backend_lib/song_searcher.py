@@ -10,6 +10,7 @@ class SongSearcher:
         options.headless = headless
         self.browser = webdriver.Firefox(options=options)
         self.browser.get('https://soundcloud.com/search')
+        self.searching = False
 
         def returnElementByCSS(css_selector, i=0):
             els = []
@@ -28,6 +29,9 @@ class SongSearcher:
         clickOnElement(returnElementByCSS('.searchOptions__navigationLink', i=2))
 
     def searchFor(self, search_term):
+        if self.searching == True:
+            return {'success': False}
+        self.searching = True
         search_term = str(search_term)
         print(f'Search Term: |{search_term}|')
 
@@ -93,7 +97,7 @@ class SongSearcher:
                 'artwork_url': artwork_url,
             })
             
-
+        self.searching = False
         return obj_results
         
 
