@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import SongQueue from "./SongQueue";
-import ShuffleItem from './ShuffleItem';
+import CustomItem from './CustomItem';
 
 class SoundcloudFavorites extends Component{
 
@@ -32,7 +32,7 @@ class SoundcloudFavorites extends Component{
     }
 
     render(){
-        let shuffle_item = <ShuffleItem add_random_song={this.addRandom}/>;
+        let shuffle_item = <CustomItem func={this.addRandom} text={'Add Random Song From Likes'}/>; //<ShuffleItem add_random_song={this.addRandom}/>;
         return <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong} prefix_songitem={shuffle_item}/>
     }
 

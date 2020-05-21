@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-class ShuffleItem extends Component{
+class CustomItem extends Component{
     
     textStyle = () => {
         let fontSize = width < 700 ? 20 : 40;
@@ -17,8 +17,8 @@ class ShuffleItem extends Component{
    
     render(){
         return(
-            <div className='shuffleButton' style={rowStyle} onClick={this.props.add_random_song.bind(this)}>
-                <h1 style={this.textStyle()}>Add Random Song From Likes</h1>
+            <div className='customButton' style={rowStyle} onClick={this.props.func.bind(this)}>
+                <h1 style={this.textStyle()}>{this.props.text}</h1>
             </div>
         );
 
@@ -35,4 +35,4 @@ const rowStyle = {
     cursor: 'pointer',
 }
 
-export default ShuffleItem;
+export default CustomItem;
