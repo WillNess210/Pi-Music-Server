@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
 
+
+const emptyContainerStyle = {
+    width: "100%",
+    textAlign: "center",
+}
+
+const messageStyle = {
+    color: "rgb(150, 150, 150)",
+}
+
 class EmptyNotification extends Component{
     
     render(){
@@ -11,15 +21,6 @@ class EmptyNotification extends Component{
     }
 }
 
-
-const emptyContainerStyle = {
-    width: "100%",
-    textAlign: "center",
-}
-
-const messageStyle = {
-    color: "rgb(150, 150, 150)",
-}
 
 
 export default EmptyNotification;

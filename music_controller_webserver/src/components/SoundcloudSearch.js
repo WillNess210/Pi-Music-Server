@@ -5,6 +5,17 @@ import axios from 'axios';
 import SongQueue from "./SongQueue";
 import CustomItem from "./CustomItem";
 
+
+const searchStyle = {
+    width: "100%",
+    height: "50px",
+    fontSize: "30px",
+    textAlign: "center",
+    color: "rgb(130, 130, 130)",
+    placeholderTextColor: "rgb(210, 210, 210)",
+}
+
+
 class SoundcloudSearch extends Component{
 
     state = {
@@ -71,7 +82,7 @@ class SoundcloudSearch extends Component{
     }
 
     render(){
-        let advancedSearchOption = this.state.songs.length == 0 ? null : <CustomItem func={this.addAdvancedSearchSongs} text={'Don\'t see your song? Click here to advanced search (takes ~10 seconds)'}/>;
+        let advancedSearchOption = this.state.songs.length === 0 ? null : <CustomItem func={this.addAdvancedSearchSongs} text={'Don\'t see your song? Click here to advanced search (takes ~10 seconds)'}/>;
         return(
             <div>
                 <input
@@ -91,14 +102,6 @@ class SoundcloudSearch extends Component{
     }
 }
 
-const searchStyle = {
-    width: "100%",
-    height: "50px",
-    fontSize: "30px",
-    textAlign: "center",
-    color: "rgb(130, 130, 130)",
-    placeholderTextColor: "rgb(210, 210, 210)",
-}
 
 SoundcloudSearch.propTypes = {
     client_id: PropTypes.string.isRequired,

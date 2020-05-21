@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 import { Dimensions } from 'react-native';
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+
+const rowStyle = {
+    width: '100%',
+    borderBottom: "1px #ccc dotted",
+    minHeight: '85px',
+    textAlign: 'center',
+    marginTop: '0px',
+    display: 'table',
+    cursor: 'pointer',
+}
 
 class CustomItem extends Component{
     
@@ -25,14 +35,5 @@ class CustomItem extends Component{
     }
 }
 
-const rowStyle = {
-    width: '100%',
-    borderBottom: "1px #ccc dotted",
-    minHeight: '85px',
-    textAlign: 'center',
-    marginTop: '0px',
-    display: 'table',
-    cursor: 'pointer',
-}
 
 export default CustomItem;

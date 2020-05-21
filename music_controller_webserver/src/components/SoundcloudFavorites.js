@@ -1,6 +1,4 @@
-import React, { Component , Fragment} from 'react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
+import React, { Component } from 'react';
 
 import SongQueue from "./SongQueue";
 import CustomItem from './CustomItem';
@@ -67,9 +65,9 @@ class SoundcloudFavorites extends Component{
 
     loadSongs = () => {
         console.log('Loading Songs');
-        this.setState({ isLoading : true }, () => {
+        this.setState({ isLoading : true }, () =>{ 
             const nextSongs = this.state.all_songs.splice(this.state.cur_index, 20);
-            if(nextSongs.length == 0){
+            if(nextSongs.length === 0){
                 this.setState({hasMore: false});
                 console.log('Ran out of Favorited Songs');
                 return;
@@ -85,7 +83,7 @@ class SoundcloudFavorites extends Component{
     
 
     render(){
-        let shuffle_item = <CustomItem func={this.addRandom} text={'Add Random Song From Likes'}/>; //<ShuffleItem add_random_song={this.addRandom}/>;
+        let shuffle_item = <CustomItem key={-1} func={this.addRandom} text={'Add Random Song From Likes'}/>; //<ShuffleItem add_random_song={this.addRandom}/>;
         return <SongQueue queue_type='add' songs={this.state.songs} current_song={null} song_mod={this.addSong} prefix_songitem={shuffle_item}/>
     }
 

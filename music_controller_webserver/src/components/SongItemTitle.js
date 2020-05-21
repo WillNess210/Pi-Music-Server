@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
 
+const containerStyle = {
+    marginLeft: '5px',
+}
+
 class SongItemTitle extends Component{
 
     titleStyle = () => {
@@ -28,9 +32,7 @@ class SongItemTitle extends Component{
     }
 }
 
-const containerStyle = {
-    marginLeft: '5px',
-}
+
 
 
 export default SongItemTitle;

@@ -24,7 +24,7 @@ class App extends Component {
   updateState(){
     axios.get('/songs').then(
       res => {
-        if(this.state.player.rep != res.data.rep){
+        if(this.state.player.rep !== res.data.rep){
           this.setState({player: res.data});
         }
     });
@@ -127,12 +127,12 @@ class App extends Component {
                 <SongQueue queue_type='queue' songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong} skip_song={this.skipSong} play_pause_func={this.togglePausePlay}/>
               </React.Fragment>
             )}/>
-            <Route exact path = "/add" render={props => (
+            <Route exact path="/add" render={props => (
               <React.Fragment>
                 <SoundcloudSearch client_id={process.env.REACT_APP_SOUNDCLOUD_ID} add_song={this.addSong} createSongObject={this.createSongObject}/>
               </React.Fragment>
             )}/>
-            <Route exact path = "/will" render={props => (
+            <Route exact path="/will" render={props => (
               <React.Fragment>
                 <SoundcloudFavorites songs={this.state.will_soundcloud_songs} add_song={this.addSong}/>
               </React.Fragment>

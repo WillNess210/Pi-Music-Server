@@ -1,11 +1,27 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Dimensions } from 'react-native';
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 
 import SongButton from "./SongButton";
 import SongItemTitle from "./SongItemTitle";
+
+const songImgStyle = {
+    margin: '5px',
+    maxHeight: '75px',
+    position: 'absolute',
+    top: '0',
+    bottom: '0',
+    left: '0',
+    right: '0',
+}
+
+const songImgContainerStyle = {
+    height: "100%",
+    width: "100%",
+    position: "relative",
+}
 
 class SongItem extends Component{
     
@@ -29,11 +45,11 @@ class SongItem extends Component{
         
 
         const renderImg = () => {
-            return isSongLoaded ? <img src={this.props.song.artwork_url} style={songImgStyle}/> : null;
+            return isSongLoaded ? <img alt={'Song'} src={this.props.song.artwork_url} style={songImgStyle}/> : null;
         }
 
         const renderTitle = () => {
-            return isSongLoaded ? <SongItemTitle title={this.props.song.title} artist={this.props.song.artist} font_size={fontSize}/> : <h1 style = {{fontSize: fontSize}}>{this.props.song.url}</h1>;
+            return isSongLoaded ? <SongItemTitle title={this.props.song.title} artist={this.props.song.artist} font_size={fontSize}/> : <h1 style={{fontSize: fontSize}}>{this.props.song.url}</h1>;
         }
 
         const renderInteractButtons = () => {
@@ -65,22 +81,7 @@ class SongItem extends Component{
     }
 }
 
-const songImgStyle = {
-    margin: '5px',
-    maxHeight: '75px',
-    position: 'absolute',
-    top: '0',
-    bottom: '0',
-    left: '0',
-    right: '0',
-    margin: 'auto',
-}
 
-const songImgContainerStyle = {
-    height: "100%",
-    width: "100%",
-    position: "relative",
-}
 
 SongItem.propTypes = {
     song: PropTypes.object.isRequired,

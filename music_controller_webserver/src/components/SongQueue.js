@@ -3,6 +3,11 @@ import SongItem from './SongItem';
 import PropTypes from 'prop-types';
 import EmptyNotification from './EmptyNotification';
 
+const songQueueStyle = {
+    display: "table",
+    width: "100%",
+    borderCollapse: "collapse",
+}
 
 class SongQueue extends Component{
     
@@ -21,7 +26,7 @@ class SongQueue extends Component{
             rows.push(<SongItem key={song['key']} song_loaded={song_loaded(song)} current_song={false} song={song} song_mod={this.props.song_mod} queue_type={this.props.queue_type}/>)
         ));
 
-        if(this.props.current_song == null && this.props.songs.length == 0){
+        if(this.props.current_song === null && this.props.songs.length === 0){
             let empty_msg = {
                 queue: 'No songs currently in queue.',
                 add: 'No songs found.'
@@ -30,7 +35,7 @@ class SongQueue extends Component{
         }
 
         return (
-            <div style = {songQueueStyle}> 
+            <div style={songQueueStyle}> 
                 {rows}
             </div>
         );
@@ -49,10 +54,5 @@ function song_loaded(song){
     return 'title' in song;
 }
 
-const songQueueStyle = {
-    display: "table",
-    width: "100%",
-    borderCollapse: "collapse",
-}
 
 export default SongQueue;
