@@ -25,8 +25,8 @@ class Browser:
             time.sleep(0.25)
         return print("Not found") if len(els) == 0 else els[i]
 
-    def clickOnElement(self, el, css='', i=0):
-        el = self.returnElementByCSS(css, i=i) if el == None else el
+    def clickOnElement(self, el, css='', i=0, timeout_seconds=10):
+        el = self.returnElementByCSS(css, i=i, timeout_seconds=timeout_seconds) if el == None else el
         time.sleep(1)
         el.click()
         return el
