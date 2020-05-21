@@ -51,7 +51,7 @@ class SoundcloudFavorites extends Component{
         this.props.add_song(chosen_song.url);
     }
 
-    componentWillMount(){
+    componentDidMount(){
         this.setState({
             songs: [],
             all_songs: this.props.songs,
