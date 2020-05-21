@@ -2,13 +2,8 @@ import time
 from flask import Flask, jsonify
 from multiprocessing import Process, Manager, Value
 
-<<<<<<< HEAD
-from .backend_lib import Song, SongPlayer, generateSoundcloudSongObject
-from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey, get_env_val
-=======
 from .backend_lib import Song, SongPlayer, SongSearcher, generateSoundcloudSongObject
-from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey
->>>>>>> full-search
+from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey, get_env_val
 
 from .endpoints.will_soundcloud import createWillSoundcloudBluePrint, getRandomLikedSong
 
