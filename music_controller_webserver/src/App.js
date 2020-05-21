@@ -27,7 +27,7 @@ class App extends Component {
         if(this.state.player.rep != res.data.rep){
           this.setState({player: res.data});
         }
-      });
+    });
   }
 
   loadWillSoundcloudLikes(){
