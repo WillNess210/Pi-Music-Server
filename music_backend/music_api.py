@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.register_blueprint(createWillSoundcloudBluePrint())
 
 song_player = SongPlayer(SOUNDCLOUD_KEY)
-song_searcher = SongSearcher(headless=False)
+song_searcher = SongSearcher()
 
 @app.route('/songs', methods=['GET'])
 def get_songs():

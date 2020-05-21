@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 
 import SongQueue from "./SongQueue";
+import CustomItem from "./CustomItem";
 
 class SoundcloudSearch extends Component{
 
@@ -14,8 +15,10 @@ class SoundcloudSearch extends Component{
     }
 
     onChange = (e) => {
-        this.setState({'current_search': e.target.value});
-        this.setState({'last_update': Date.now()});
+        this.setState({
+            'current_search': e.target.value,
+            'last_update': Date.now(),
+        });
     };
     
 
@@ -68,6 +71,7 @@ class SoundcloudSearch extends Component{
     }
 
     render(){
+        let advancedSearchOption = this.state.songs.length == 0 ? null : <CustomItem func={this.addAdvancedSearchSongs} text={'Don\'t see your song? Click here to advanced search (takes ~10 seconds)'}/>;
         return(
             <div>
                 <input
@@ -80,9 +84,9 @@ class SoundcloudSearch extends Component{
                     autoFocus
                     placeholder="Search For Song Here"
                 />
-                <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong}/>
+
+                <SongQueue queue_type='add' songs={this.state['songs']} current_song={null} song_mod={this.addSong} prefix_songitem={advancedSearchOption}/>
             </div>
-            
         );
     }
 }
