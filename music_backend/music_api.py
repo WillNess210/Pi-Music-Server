@@ -2,7 +2,7 @@ import time
 from flask import Flask, jsonify
 from multiprocessing import Process, Manager, Value
 
-from .backend_lib import Song, SongPlayer, generateSoundcloudSongObject
+from .backend_lib import Song, SongPlayer, SongSearcher, generateSoundcloudSongObject
 from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey
 
 from .endpoints.will_soundcloud import createWillSoundcloudBluePrint, getRandomLikedSong
@@ -13,6 +13,7 @@ app = Flask(__name__)
 app.register_blueprint(createWillSoundcloudBluePrint())
 
 song_player = SongPlayer(SOUNDCLOUD_KEY)
+song_searcher = SongSearcher(headless=False)
 
 @app.route('/songs', methods=['GET'])
 def get_songs():
@@ -49,6 +50,11 @@ def toggle_autoplay():
     global global_state_obj
     GlobalState(global_state_obj).toggleAutoPlay()
     return jsonify({'success': True})
+
+@app.route('/search/<search_term>', methods = ['GET'])
+def search_for(search_term):
+    global song_searcher
+    return jsonify({'songs': song_searcher.searchFor(search_term)})
 
 def record_loop(global_state_obj):
     global song_player
