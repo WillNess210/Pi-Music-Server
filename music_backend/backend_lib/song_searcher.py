@@ -1,33 +1,13 @@
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from . browser_control import Browser
 import time
-import random
 
-class SongSearcher:
+class SongSearcher(Browser):
     
     def __init__(self, headless=True):
-        options = Options()
-        options.headless = headless
-        self.browser = webdriver.Firefox(options=options)
-        self.browser.get('https://soundcloud.com/search')
+        super().__init__(headless=headless, landing_page='https://soundcloud.com/search')
+        self.clickOnElement(None, '.searchOptions__navigationLink', i=2)
         self.searching = False
-
-        def returnElementByCSS(css_selector, i=0):
-            els = []
-            timeout = 40
-            while len(els) == 0 and timeout >= 0:
-                els = self.browser.find_elements_by_css_selector(css_selector)
-                timeout -= 1
-                time.sleep(0.25)
-            return print("Not Found") if len(els) == 0 else els[i]
-        def clickOnElement(el, css=''):
-            if el == None: 
-                el = returnElementByCSS(css)
-            time.sleep(1)
-            el.click()
-            return el
-        clickOnElement(returnElementByCSS('.searchOptions__navigationLink', i=2))
-
+        
     def searchFor(self, search_term):
         if self.searching == True:
             return {'success': False}
@@ -35,38 +15,8 @@ class SongSearcher:
         search_term = str(search_term)
         print(f'Search Term: |{search_term}|')
 
-        def returnElementsByCSS(css_selector):
-            return self.browser.find_elements_by_css_selector(css_selector)
-
-        def returnElementByCSS(css_selector, i=0):
-            els = []
-            timeout = 20
-            while len(els) == 0 and timeout >= 20:
-                els = self.browser.find_elements_by_css_selector(css_selector)
-                timeout -= 1
-                time.sleep(0.25)
-            return print("Not Found") if len(els) == 0 else els[i]
-
-        def typeInElement(el, msg, css=''):
-            if el == None:
-                el = returnElementByCSS(css)
-            time.sleep(1)
-            el.clear()
-            time.sleep(1 + random.random() * 1)
-            for key in msg:
-                time.sleep(0.05 + random.random() * 0.1)
-                el.send_keys(key)
-            return el
-
-        def clickOnElement(el, css=''):
-            if el == None: 
-                el = returnElementByCSS(css)
-            time.sleep(1)
-            el.click()
-            return el
-
-        typeInElement(None, search_term, '.headerSearch__input')
-        clickOnElement(None, '.headerSearch__submit')
+        self.typeInElement(None, search_term, '.headerSearch__input')
+        self.clickOnElement(None, '.headerSearch__submit')
         time.sleep(2)
         self.browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
         time.sleep(0.5)
@@ -74,7 +24,7 @@ class SongSearcher:
         time.sleep(1.5)
 
         obj_results = []
-        search_items = returnElementsByCSS('.sound.searchItem__trackItem')
+        search_items = self.returnElementsByCSS('.sound.searchItem__trackItem')
         for item in search_items:
             #artwork_url
             obj = item.find_element_by_css_selector('.sc-artwork.image__full')

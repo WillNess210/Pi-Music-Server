@@ -14,7 +14,7 @@ print(f'Attempting to start on {HOST_VAL}')
 app = Flask(__name__)
 app.register_blueprint(createWillSoundcloudBluePrint())
 
-song_player = SongPlayer(SOUNDCLOUD_KEY)
+song_player = SongPlayer(SOUNDCLOUD_KEY, headless=True)
 song_searcher = SongSearcher()
 
 @app.route('/songs', methods=['GET'])
