@@ -17,7 +17,7 @@ class App extends Component {
       "rep": -1,
       "auto_play": false,
     },
-    will_soundcloud_songs: []
+    will_soundcloud_songs: [],
   }
 
 
