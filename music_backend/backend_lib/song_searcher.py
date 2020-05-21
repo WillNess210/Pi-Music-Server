@@ -65,33 +65,34 @@ class SongSearcher:
         clickOnElement(None, '.headerSearch__submit')
         time.sleep(2)
         self.browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
-
-        lmap = lambda func, origin_list : list(map(func, origin_list))
-        lfilter = lambda func, origin_list : list(filter(func, origin_list))
-
-        urls = lmap(lambda a : a.get_attribute('href'), returnElementsByCSS('.soundTitle__title'))
-        platforms = ['soundcloud' for url in urls]
-        titles = lmap(lambda a : a.text, returnElementsByCSS('.soundTitle__title'))
-        artists = lmap(lambda a : a.text, returnElementsByCSS('.soundTitle__usernameText'))
-        artwork_urls = lmap(lambda a : a.get_attribute('style'), returnElementsByCSS('span.sc-artwork'))
-        artwork_urls = lfilter(lambda a : 'background-image' in a, artwork_urls)
-        artwork_urls = lmap(lambda a : a.split('url("')[1].split('");')[0], artwork_urls)
-
-        def_lists = {
-            'url': urls,
-            'platform': platforms,
-            'title': titles,
-            'artist': artists,
-            'artwork_url': artwork_urls,
-        }
+        time.sleep(0.5)
+        self.browser.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+        time.sleep(1.5)
 
         obj_results = []
-        cols = list(def_lists.keys())
-        for i in range(len(urls)):
-            to_add = {}
-            for col in cols:
-                to_add[col] = def_lists[col][i]
-            obj_results.append(to_add)
+        search_items = returnElementsByCSS('.sound.searchItem__trackItem')
+        for item in search_items:
+            #artwork_url
+            obj = item.find_element_by_css_selector('.sc-artwork.image__full')
+            style = obj.get_attribute('style')
+            if 'background-image' not in style:
+                continue
+            artwork_url = style.split('url("')[1][:-3]
+            #title & url
+            obj = item.find_element_by_css_selector('.soundTitle__title')
+            title = obj.text
+            url = obj.get_attribute('href')
+            #artist
+            obj = item.find_element_by_css_selector('.soundTitle__usernameText')
+            artist = obj.text
+            obj_results.append({
+                'url': url,
+                'platform': 'soundcloud',
+                'title': title,
+                'artist': artist,
+                'artwork_url': artwork_url,
+            })
+            
 
         return obj_results
         

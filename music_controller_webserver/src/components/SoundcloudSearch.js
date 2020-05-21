@@ -43,10 +43,17 @@ class SoundcloudSearch extends Component{
         );
     };
 
+    addAdvancedSearchSongs = () => {
+        axios.get(`/search/${encodeURIComponent(this.state.search)}`).then(
+            res => {
+                    this.setState({songs: res.data.songs.concat(this.state.songs)});
+                }
+        );
+    }
 
     componentDidMount(){
         this.interval = setInterval(() => {
-            if(this.state.current_search !== this.state.search && Date.now() - this.state.last_update > 500){
+            if(this.state.current_search !== this.state.search && Date.now() - this.state.last_update > 1000){
                 this.setState({
                     search: this.state.current_search,
                     last_update: Date.now(),
