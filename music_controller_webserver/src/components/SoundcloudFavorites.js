@@ -63,9 +63,10 @@ class SoundcloudFavorites extends Component{
     }
 
     loadSongs = () => {
-        console.log('Loading Songs');
+        console.log('Loading Songs ');
         this.setState({ isLoading : true }, () =>{ 
-            const nextSongs = this.state.all_songs.slice(this.state.cur_index, 20);
+            const nextSongs = this.state.all_songs.slice(this.state.cur_index, this.state.cur_index + 20);
+            console.log(`Loaded ${nextSongs.length}/${this.state.all_songs.length}`)
             if(nextSongs.length === 0){
                 this.setState({hasMore: false});
                 console.log('Ran out of Favorited Songs');
