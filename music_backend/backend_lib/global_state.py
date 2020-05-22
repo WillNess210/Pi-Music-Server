@@ -66,7 +66,7 @@ class GlobalState:
         for song in new_obj['songs']:
             new_obj['rep'] += str(len(song['url']))
         new_obj['rep'] = int(new_obj['rep'])
-        if prev_rep and new_obj['rep'] == prev_rep:
+        if prev_rep and new_obj['rep'] == int(prev_rep):
             return None # no need to update client
         new_obj['auto_play'] = self.isAutoPlayOn()
         new_obj['updates'] = True

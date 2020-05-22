@@ -14,7 +14,7 @@ class App extends Component {
     player: {
       "current_song": null,
       "songs": [],
-      "rep": -1,
+      "rep": '-1',
       "auto_play": false,
     },
     will_soundcloud_songs: [],
@@ -22,10 +22,15 @@ class App extends Component {
 
 
   updateState(){
-    axios.get('/songs').then(
+    let getStr = `/songs/${this.state.player.rep}`;
+    console.log(getStr);
+    axios.get(`/songs/${this.state.player.rep}`).then(
       res => {
+        console.log(res.data);
         if(this.state.player.rep !== res.data.rep){
           this.setState({player: res.data});
+          console.log(`Setting state to:`)
+          console.log(res.data);
         }
     });
   }

@@ -28,7 +28,7 @@ def get_songs_repcheck(rep):
     global global_state_obj
     global_state = GlobalState(global_state_obj)
     result = global_state.getSongsEndpointRep(prev_rep=rep)
-    return jsonify(result if result != None else {'rep': rep, 'updates': False,})
+    return jsonify(result if result != None else {'rep': int(rep)})
 
 @app.route('/add_song/url=<path:track_url>', methods = ['GET'])
 def add_song(track_url):
