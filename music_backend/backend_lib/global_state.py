@@ -54,7 +54,8 @@ class GlobalState:
         return True
 
     # /songs
-    def getSongsEndpointRep(self):
+    def getSongsEndpointRep(self, prev_rep = None):
+
         hasCurrentSong = self.hasCurrentSong()
         new_obj = {}
         new_obj['current_song'] = None if not hasCurrentSong else self.getCurrentSong().dictRep()
@@ -65,7 +66,10 @@ class GlobalState:
         for song in new_obj['songs']:
             new_obj['rep'] += str(len(song['url']))
         new_obj['rep'] = int(new_obj['rep'])
+        if prev_rep and new_obj['rep'] == prev_rep:
+            return None # no need to update client
         new_obj['auto_play'] = self.isAutoPlayOn()
+        new_obj['updates'] = True
         return new_obj
     
     # /add_song
