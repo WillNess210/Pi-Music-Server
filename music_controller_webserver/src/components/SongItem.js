@@ -7,29 +7,28 @@ const { width } = Dimensions.get('window');
 import SongButton from "./SongButton";
 import SongItemTitle from "./SongItemTitle";
 
-const songImgStyle = {
-    margin: '5px',
-    maxHeight: '75px',
-    position: 'absolute',
-    top: '0',
-    bottom: '0',
-    left: '0',
-    right: '0',
-}
-
 const songImgContainerStyle = {
-    height: "100%",
-    width: "100%",
-    position: "relative",
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
 }
 
 class SongItem extends Component{
     
+    songImgStyle = () => {
+        return {
+            margin: '5px',
+            maxHeight: width < 700 ? '70px' : '110px'
+        }
+    }
+
     rowStyle = () => {
         return {
             display: 'grid',
             width: '100%',
-            gridTemplateColumns: width < 700 ? "80px calc(100% - 220px) 140px" : "80px calc(100% - 260px) 180px",
+            gridTemplateColumns: width < 700 ? "80px calc(100% - 220px) 140px" : "120px calc(100% - 300px) 180px",
             background: "rgb(240, 240, 240)",
             borderBottom: "1px #ccc dotted",
             minHeight: '85px',
@@ -45,7 +44,7 @@ class SongItem extends Component{
         
 
         const renderImg = () => {
-            return isSongLoaded ? <img alt={'Song'} src={this.props.song.artwork_url} style={songImgStyle}/> : null;
+            return isSongLoaded ? <img alt={'Song'} src={this.props.song.artwork_url} style={this.songImgStyle()}/> : null;
         }
 
         const renderTitle = () => {
