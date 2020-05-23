@@ -7,6 +7,7 @@ import Header from "./components/layout/Header";
 import SongQueue from "./components/SongQueue";
 import SoundcloudSearch from './components/SoundcloudSearch';
 import SoundcloudFavorites from './components/SoundcloudFavorites';
+import SpotifyLanding from './components/SpotifyLanding';
 
 class App extends Component {
 
@@ -107,6 +108,12 @@ class App extends Component {
     });
   }
 
+  sendSpotifyKey = (spotify_key) => {
+    axios.get(`/send_spotify_key/${spotify_key}`).then(res => {
+      console.log(res.data);
+    });
+  }
+
   toggleAutoPlay = () => {
     this.setState({
       player: {
@@ -121,15 +128,24 @@ class App extends Component {
     });
   }
 
+  homepageRender = () => {
+    return props => (
+      <React.Fragment>
+        <SongQueue queue_type='queue' songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong} skip_song={this.skipSong} play_pause_func={this.togglePausePlay}/>
+      </React.Fragment>
+    );
+  }
+
   render() {
     return (
       <Router>
         <div className="App">
           <div className="container">
             <Header auto_play={this.state.player.auto_play} toggle_auto_play={this.toggleAutoPlay}/>
-            <Route exact path="/" render={props => (
+            <Route exact path="/" render={this.homepageRender()}/>
+            <Route exact path="/spotify_return" render={props => (
               <React.Fragment>
-                <SongQueue queue_type='queue' songs={this.state.player['songs']} current_song={this.state.player['current_song']} song_mod={this.removeSong} skip_song={this.skipSong} play_pause_func={this.togglePausePlay}/>
+                <SpotifyLanding send_key_func={this.sendSpotifyKey}/>
               </React.Fragment>
             )}/>
             <Route exact path="/add" render={props => (

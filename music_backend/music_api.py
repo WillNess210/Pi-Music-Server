@@ -65,6 +65,11 @@ def search_for(search_term):
     global song_searcher
     return jsonify({'songs': song_searcher.searchFor(search_term)})
 
+@app.route('/send_spotify_key/<spotify_key>', methods = ['GET'])
+def receive_key(spotify_key):
+    print(f'Got spotify key: {spotify_key}')
+    return jsonify({'success': True})
+
 def record_loop(global_state_obj):
     global song_player
     global_state = GlobalState(global_state_obj)
