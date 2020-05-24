@@ -96,8 +96,7 @@ def record_loop(global_state_obj):
     time.sleep(2)
     while True:
         songs = global_state.getSongs()
-        print(f"Song queue len: {len(songs)}")
-        print(f"Spotify Key: {global_state.getSpotifyKey()}")
+        #print(f"Song queue len: {len(songs)}")
         if len(songs) == 0 and global_state.isAutoPlayOn():
             global_state.addSong(getRandomLikedSong())
         if len(songs) > 0:
