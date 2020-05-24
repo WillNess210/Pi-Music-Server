@@ -26,7 +26,7 @@ class SongPlayer(Browser):
         def isSongOver():
             return (getButtonTitle() == 'Play' and global_state.isPlaying() and lastPlaying) or global_state.shouldSkip()
         def checkAndDismissTeaser():
-            teaserObj = self.returnElementByCSS('teaser__dismiss', timeout_seconds=0)
+            teaserObj = self.returnElementByCSS('.teaser__dismiss', timeout_seconds=0.6)
             if teaserObj == None: return
             teaserObj.click()
             time.sleep(1)
