@@ -85,6 +85,11 @@ def receive_key(auth_code):
     spotify_player.loadSpotifyDevice(GlobalState(global_state_obj))
     return jsonify({'success': True})
 
+@app.route('/spotify_likes', methods = ['GET'])
+def send_spotify_likes():
+    global spotify_player
+    return jsonify(spotify_player.getLikes())
+
 def record_loop(global_state_obj):
     global song_player
     global_state = GlobalState(global_state_obj)
