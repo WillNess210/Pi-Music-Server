@@ -41,6 +41,10 @@ class Header extends Component{
             title: 'Will\'s Songs',
             link: "/will",
         },
+        {
+            title: 'Spotify Likes',
+            link: '/spotify_likes',
+        }
     ]
 
     render(){

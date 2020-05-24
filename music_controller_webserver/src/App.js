@@ -8,6 +8,7 @@ import SongQueue from "./components/SongQueue";
 import SoundcloudSearch from './components/SoundcloudSearch';
 import SoundcloudFavorites from './components/SoundcloudFavorites';
 import SpotifyLanding from './components/SpotifyLanding';
+import SpotifyLikes from './components/SpotifyLikes';
 
 class App extends Component {
 
@@ -156,6 +157,11 @@ class App extends Component {
             <Route exact path="/will" render={props => (
               <React.Fragment>
                 <SoundcloudFavorites songs={this.state.will_soundcloud_songs} add_song={this.addSong}/>
+              </React.Fragment>
+            )}/>
+            <Route exact path="/spotify_likes" render={ props => (
+              <React.Fragment>
+                <SpotifyLikes contains_spotify_key={this.state.player.connected_to_spotify} spotify_client_id={process.env.REACT_APP_SPOTIFY_CLIENT_ID} redirect_uri={process.env.REACT_APP_REDIRECT_URI}/>
               </React.Fragment>
             )}/>
           </div>

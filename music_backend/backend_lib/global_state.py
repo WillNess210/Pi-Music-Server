@@ -63,6 +63,7 @@ class GlobalState:
             new_obj['current_song']['playing'] = self.global_state['playing']
         new_obj['songs'] = list(s.dictRep() for s in self.getSongs())
         new_obj['rep'] = ('1' if hasCurrentSong else '0') + ('1' if self.global_state['playing'] else '0') + ('1' if self.isAutoPlayOn() else '0')
+        new_obj['rep'] += {True: '1', False: '0'}[self.hasSpotifyKey()]
         for song in new_obj['songs']:
             new_obj['rep'] += str(len(song['url']))
         new_obj['rep'] = int(new_obj['rep'])
@@ -70,6 +71,7 @@ class GlobalState:
             return None # no need to update client
         new_obj['auto_play'] = self.isAutoPlayOn()
         new_obj['updates'] = True
+        new_obj['connected_to_spotify'] = self.hasSpotifyKey()
         return new_obj
     
     # /add_song
@@ -83,6 +85,15 @@ class GlobalState:
                 return True
         return False
 
+    def setSpotifyKey(self, spotify_key):
+        self.global_state['spotify_key'] = spotify_key
+
+    def getSpotifyKey(self):
+        return self.global_state['spotify_key']
+
+    def hasSpotifyKey(self):
+        return len(self.global_state['spotify_key']) > 0
+
 def getInitDictionary(manager):
     return {
         'current_song': manager.list([None]),
@@ -90,4 +101,5 @@ def getInitDictionary(manager):
         'skip_flag': False,
         'playing': False,
         'auto_play': False,
+        'spotify_key': '',
     }

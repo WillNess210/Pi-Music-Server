@@ -8,3 +8,14 @@ def getSoundcloudKey():
 
 def get_env_val(key):
     return os.getenv(key)
+
+def get_spotify_creds():
+    return {
+        'SPOTIFY_CLIENT_ID': os.getenv('SPOTIFY_CLIENT_ID'),
+        'SPOTIFY_CLIENT_SECRET': os.getenv('SPOTIFY_CLIENT_SECRET'),
+        'REDIRECT_URI': os.getenv('REDIRECT_URI'),
+        'DEVICE_NAME': os.getenv('DEVICE_NAME'),
+    }
+
+def get_firefox_profile_loc():
+    return os.getenv('FIREFOX_PROFILE_LOC')

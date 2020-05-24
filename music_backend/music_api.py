@@ -1,13 +1,16 @@
 import time
 from flask import Flask, jsonify
 from multiprocessing import Process, Manager, Value
+import requests
+import json
 
-from .backend_lib import Song, SongPlayer, SongSearcher, generateSoundcloudSongObject
-from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey, get_env_val
+from .backend_lib import Song, SongPlayer, SongSearcher, SpotifyPlayer, generateSoundcloudSongObject
+from .backend_lib import getInitDictionary, GlobalState, getSoundcloudKey, get_env_val, get_spotify_creds
 
 from .endpoints.will_soundcloud import createWillSoundcloudBluePrint, getRandomLikedSong
 
 SOUNDCLOUD_KEY = getSoundcloudKey()
+SPOTIFY_CREDS = get_spotify_creds()
 HOST_VAL = get_env_val('HOST')
 print(f'Attempting to start on {HOST_VAL}')
 
@@ -16,6 +19,7 @@ app.register_blueprint(createWillSoundcloudBluePrint())
 
 song_player = SongPlayer(SOUNDCLOUD_KEY, headless=True)
 song_searcher = SongSearcher()
+spotify_player = SpotifyPlayer(SPOTIFY_CREDS['DEVICE_NAME'], headless=True)
 
 @app.route('/songs', methods=['GET'])
 def get_songs():
@@ -65,9 +69,20 @@ def search_for(search_term):
     global song_searcher
     return jsonify({'songs': song_searcher.searchFor(search_term)})
 
-@app.route('/send_spotify_key/<spotify_key>', methods = ['GET'])
-def receive_key(spotify_key):
-    print(f'Got spotify key: {spotify_key}')
+@app.route('/send_spotify_key/<auth_code>', methods = ['GET'])
+def receive_key(auth_code):
+    global global_state_obj
+    global spotify_player
+    # convert from auth code to access token
+    access_token = json.loads(requests.post('https://accounts.spotify.com/api/token', data = {
+        'grant_type': 'authorization_code',
+        'code': auth_code,
+        'redirect_uri': SPOTIFY_CREDS['REDIRECT_URI'],
+        'client_id': SPOTIFY_CREDS['SPOTIFY_CLIENT_ID'],
+        'client_secret': SPOTIFY_CREDS['SPOTIFY_CLIENT_SECRET'],
+    }).text)['access_token']
+    GlobalState(global_state_obj).setSpotifyKey(access_token)
+    spotify_player.loadSpotifyDevice(GlobalState(global_state_obj))
     return jsonify({'success': True})
 
 def record_loop(global_state_obj):
@@ -77,6 +92,7 @@ def record_loop(global_state_obj):
     while True:
         songs = global_state.getSongs()
         print(f"Song queue len: {len(songs)}")
+        print(f"Spotify Key: {global_state.getSpotifyKey()}")
         if len(songs) == 0 and global_state.isAutoPlayOn():
             global_state.addSong(getRandomLikedSong())
         if len(songs) > 0:
