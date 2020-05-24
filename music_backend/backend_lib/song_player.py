@@ -9,9 +9,9 @@ class SongPlayer(Browser):
         self.soundcloud_key = soundcloud_key
 
     def playSong(self, global_state, song):
+        print("playing from soundcloud")
         global_state.songStarted()
-        if(song.platform == 'soundcloud'):
-            self.playSongSoundcloud(global_state, song)
+        self.playSongSoundcloud(global_state, song)
         global_state.songFinished()
 
     def playSongSoundcloud(self, global_state, song):
@@ -47,3 +47,4 @@ class SongPlayer(Browser):
             
             lastPlaying = global_state.isPlaying()
             time.sleep(1)
+        self.goToURL('http://google.com')

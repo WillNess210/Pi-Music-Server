@@ -5,6 +5,10 @@ import axios from 'axios';
 
 class SpotifyLikes extends Component{
 
+    state = {
+        songs: [],
+    }
+
     addSong = (track_url) => {
         // remove song locally
         this.setState({
@@ -27,6 +31,7 @@ class SpotifyLikes extends Component{
         this.setState({
             songs: [],
         });
+        if(!this.props.contains_spotify_key) return;
         this.loadSongs();
     }
 
@@ -36,8 +41,11 @@ class SpotifyLikes extends Component{
             const link_url = `https://accounts.spotify.com/authorize?client_id=${this.props.spotify_client_id}&response_type=code&redirect_uri=${this.props.redirect_uri}&scope=${scopes}&state=abcd`
             console.log(`Adding link with URL ${link_url}`)
             return (<a href={link_url}> Click Here to Log into Spotify </a>);
+        }else{
+            if(this.state.songs.length == 0){
+                this.loadSongs();
+            }
         }
-        console.log(`NOT ADDING link with URL`)
         return <SongQueue queue_type='add' songs={this.state.songs} current_song={null} song_mod={this.addSong} />
     }
 }

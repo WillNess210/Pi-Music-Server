@@ -1,4 +1,5 @@
 class GlobalState:
+
     def __init__(self, global_state_obj):
         self.global_state = global_state_obj
 

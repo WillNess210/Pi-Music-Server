@@ -26,6 +26,9 @@ class Song:
     def dictRep(self):
         return self.__dict__
 
+def generateSpotifySongObject(global_state, spotify_uri, spotify_player):
+    return spotify_player.getSongObjectFromSpotifyUri(global_state, spotify_uri)
+
 def generateSoundcloudSongObject(soundcloud_key, track_url):
     url_to_query = f"https://soundcloud.com/oembed?url={track_url}&client_id={soundcloud_key}"
     resp = ET.fromstring(requests.get(url_to_query).content)
