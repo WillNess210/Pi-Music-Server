@@ -87,7 +87,7 @@ class SpotifyPlayer(Browser):
         if self.cached_songs != None:
             return self.cached_songs
         sp = spotipy.Spotify(auth=global_state.getSpotifyKey())
-        liked_tracks = sp.current_user_saved_tracks(limit=5)['items']
+        liked_tracks = sp.current_user_saved_tracks(limit=30)['items']
         songs = []
         for song in liked_tracks:
             song = song['track']
