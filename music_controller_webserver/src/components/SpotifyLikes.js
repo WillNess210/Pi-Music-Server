@@ -1,8 +1,35 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import SongQueue from './SongQueue';
+import axios from 'axios';
 
 
 class SpotifyLikes extends Component{
+
+    addSong = (track_url) => {
+        // remove song locally
+        this.setState({
+            songs: [...this.state["songs"].filter(song => song.url !== track_url)]
+        });
+        // add song to server
+        this.props.add_song(track_url);
+    }
+
+    loadSongs = () => {
+        axios.get('/spotify_likes').then(
+            res => {
+                console.log(res);
+                this.setState({songs: res.data.songs});
+            }
+        );
+    }
+
+    componentDidMount(){
+        this.setState({
+            songs: [],
+        });
+        this.loadSongs();
+    }
+
     render(){
         if(!this.props.contains_spotify_key){
             const scopes = 'app-remote-control%20streaming%20user-read-private%20user-read-email%20user-read-playback-state%20user-modify-playback-state%20user-read-currently-playing%20user-library-read'
@@ -11,7 +38,7 @@ class SpotifyLikes extends Component{
             return (<a href={link_url}> Click Here to Log into Spotify </a>);
         }
         console.log(`NOT ADDING link with URL`)
-        return <h1> Welcome to Spotify! </h1>
+        return <SongQueue queue_type='add' songs={this.state.songs} current_song={null} song_mod={this.addSong} />
     }
 }
 

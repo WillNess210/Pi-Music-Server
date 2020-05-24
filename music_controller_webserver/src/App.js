@@ -161,7 +161,7 @@ class App extends Component {
             )}/>
             <Route exact path="/spotify_likes" render={ props => (
               <React.Fragment>
-                <SpotifyLikes contains_spotify_key={this.state.player.connected_to_spotify} spotify_client_id={process.env.REACT_APP_SPOTIFY_CLIENT_ID} redirect_uri={process.env.REACT_APP_REDIRECT_URI}/>
+                <SpotifyLikes contains_spotify_key={this.state.player.connected_to_spotify} spotify_client_id={process.env.REACT_APP_SPOTIFY_CLIENT_ID} redirect_uri={process.env.REACT_APP_REDIRECT_URI} add_song={this.addSong}/>
               </React.Fragment>
             )}/>
           </div>
