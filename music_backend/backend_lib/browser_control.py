@@ -4,16 +4,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 import random
 import time
 
-from . constants_fetch import get_firefox_profile_loc
-
 class Browser:
     def __init__(self, headless=True, landing_page='http://google.com'):
         options = Options()
         options.headless = headless
         options.set_preference('media.emp.enabled', True)
         options.set_preference('media.gmp-manager.updateEnabled', True)
-        profile = webdriver.FirefoxProfile(get_firefox_profile_loc())
-        self.browser = webdriver.Firefox(profile, options=options)
+        #profile = webdriver.FirefoxProfile(get_firefox_profile_loc())
+        self.browser = webdriver.Firefox(options=options)
         self.browser.get(landing_page)
 
     def goToURL(self, url):

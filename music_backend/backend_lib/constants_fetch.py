@@ -16,6 +16,3 @@ def get_spotify_creds():
         'REDIRECT_URI': os.getenv('REDIRECT_URI'),
         'DEVICE_NAME': os.getenv('DEVICE_NAME'),
     }
-
-def get_firefox_profile_loc():
-    return os.getenv('FIREFOX_PROFILE_LOC')
