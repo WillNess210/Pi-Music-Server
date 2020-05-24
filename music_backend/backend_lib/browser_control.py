@@ -1,17 +1,30 @@
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.common.action_chains import ActionChains
 import random
 import time
+
+from . constants_fetch import get_firefox_profile_loc
 
 class Browser:
     def __init__(self, headless=True, landing_page='http://google.com'):
         options = Options()
         options.headless = headless
-        self.browser = webdriver.Firefox(options=options)
+        options.set_preference('media.emp.enabled', True)
+        options.set_preference('media.gmp-manager.updateEnabled', True)
+        profile = webdriver.FirefoxProfile(get_firefox_profile_loc())
+        self.browser = webdriver.Firefox(profile, options=options)
         self.browser.get(landing_page)
 
     def goToURL(self, url):
         self.browser.get(url)
+
+    def sendKeyToBrowser(self, key, post_sleep = None):
+        actions = ActionChains(self.browser)
+        actions.send_keys(key)
+        actions.perform()
+        if post_sleep != None and post_sleep > 0:
+            time.sleep(post_sleep)
 
     def returnElementsByCSS(self, css_selector):
         return self.browser.find_elements_by_css_selector(css_selector)
